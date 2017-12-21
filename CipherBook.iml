@@ -16,5 +16,6 @@
     <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.6" level="project" />
     <orderEntry type="library" name="Maven: com.alibaba:fastjson:1.2.43" level="project" />
     <orderEntry type="library" name="Maven: org.jdom:jdom:2.0.2" level="project" />
+    <orderEntry type="library" name="Maven: org.jetbrains:annotations-java5:15.0" level="project" />
   </component>
 </module>
