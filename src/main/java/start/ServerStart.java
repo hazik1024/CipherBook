@@ -3,7 +3,6 @@ package start;
 
 import config.StartupConfig;
 import network.socket.SocketClient;
-import network.socket.SocketServer;
 import settings.NetworkSetting;
 import org.jdom2.DataConversionException;
 import org.jdom2.Element;
@@ -24,12 +23,15 @@ public class ServerStart {
             doc = builder.build(inputStream);
         }
         catch (IOException e) {
+            System.out.println("找不到systemconfig.xml文件");
             e.printStackTrace();
         }
         catch (JDOMException e) {
+            System.out.println("找不到systemconfig.xml文件");
             e.printStackTrace();
         }
         if (doc == null) {
+            System.out.println("找不到systemconfig.xml文件");
             return;
         }
 
@@ -68,11 +70,11 @@ public class ServerStart {
         //启动SocketServer和SocketClient
         try
         {
-            SocketServer server = new SocketServer(NetworkSetting.getInstance().getServerPort());
-            server.start();
-            Thread.sleep(1000);
-            SocketClient client = new SocketClient();
-            client.connect(NetworkSetting.getInstance().getHost(), NetworkSetting.getInstance().getClientPort());
+//            SocketServer server = new SocketServer(NetworkSetting.getInstance().getServerPort());
+//            server.start();
+//            Thread.sleep(1000);
+//            SocketClient client = new SocketClient();
+//            client.connect(NetworkSetting.getInstance().getHost(), NetworkSetting.getInstance().getClientPort());
         }
         catch (Exception e)
         {

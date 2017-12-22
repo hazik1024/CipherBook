@@ -12,7 +12,7 @@ import java.util.Properties;
 
 public class DBSetting {
 
-    private static final String propertyPath = "../../resource/";
+    private static final String propertyPath = "../";
 
     private static DBSetting instance = new DBSetting();
 

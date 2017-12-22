@@ -1,9 +1,12 @@
 package start;
 
+import service.BaseService;
 import settings.DBSetting;
 import org.jdom2.DataConversionException;
 import org.jdom2.Element;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 public class ServerManager {
@@ -22,7 +25,8 @@ public class ServerManager {
         }
     }
 
-    public void loadModule() {
+
+    public void loadServices() {
 
     }
 }

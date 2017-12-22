@@ -6,4 +6,8 @@ public abstract class BaseAction {
     protected String sid;
 
     public abstract void pack();
+
+    public abstract void unpack();
+
+    public abstract Integer getCode();
 }

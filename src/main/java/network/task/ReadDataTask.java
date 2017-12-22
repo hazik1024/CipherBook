@@ -1,15 +1,17 @@
 package network.task;
 
-import network.socket.SocketBuffer;
+import network.socket.Socketable;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.SocketException;
 
 public class ReadDataTask implements Runnable {
 
-    private SocketBuffer socketBuffer;
-    public ReadDataTask(SocketBuffer socketBuffer) {
-        this.socketBuffer = socketBuffer;
+    private InputStream stream;
+    private Socketable target;
+    public ReadDataTask(InputStream stream, Socketable target) {
+        this.target = target;
     }
 
     public void run() {
@@ -17,13 +19,13 @@ public class ReadDataTask implements Runnable {
         do {
             try {
                 byte[] bytes = new byte[8192];
-                int len = this.socketBuffer.getInputStream().read(bytes);
+                int len = this.stream.read(bytes);
                 if (len < 0) {
                     System.out.println("ReadDataTask break...");
                     break;
                 }
                 if (len > 0) {
-                    this.socketBuffer.appendData(bytes, len);
+                    this.target.appendData(bytes, len);
                 }
             }
             catch (SocketException e1) {
@@ -37,17 +39,11 @@ public class ReadDataTask implements Runnable {
             }
         }
         while (!Thread.interrupted());
-
-        if (socketException == null) {
-            this.socketBuffer.taskFinish();
-        }
-        else {
-            this.socketBuffer.taskError(socketException);
-        }
+        this.target.close(socketException);
     }
 
     public void close() {
         Thread.currentThread().interrupt();
-        this.socketBuffer = null;
+        this.target = null;
     }
 }

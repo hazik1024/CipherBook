@@ -3,8 +3,11 @@
     <words>
       <w>appversion</w>
       <w>extdata</w>
+      <w>gatewayservice</w>
       <w>idcard</w>
+      <w>keepalive</w>
       <w>sourcetype</w>
+      <w>systemconfig</w>
       <w>termtype</w>
       <w>topid</w>
     </words>
