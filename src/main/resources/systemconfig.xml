@@ -1,0 +1,8 @@
+<root>
+    <database>
+        <db name="mysql" type="2" filename="mysql.properties"></db>
+    </database>
+    <network>
+        <socket host="127.0.0.1" clientport="55521" serverport="55521" timeout="4000"></socket>
+    </network>
+</root>
