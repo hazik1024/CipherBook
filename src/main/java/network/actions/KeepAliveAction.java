@@ -5,8 +5,8 @@ import enums.ActionType;
 public class KeepAliveAction extends BaseAction {
 
     @Override
-    public void pack() {
-
+    public String pack() {
+        return "";
     }
 
     @Override
@@ -15,7 +15,7 @@ public class KeepAliveAction extends BaseAction {
     }
 
     @Override
-    public Integer getCode() {
-        return ActionType.keepalive.getCode();
+    public Integer getTopid() {
+        return ActionType.keepalive.getTopid();
     }
 }

@@ -1,15 +1,29 @@
 package network.task;
 
+import util.NetworkUtil;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.TimerTask;
 
 public class HeartbeatTask extends TimerTask {
-//    private SocketBuffer socketBuffer;
-//    public HeartbeatTask(SocketBuffer socketBuffer) {
-//        this.socketBuffer = socketBuffer;
-//    }
-
+    private OutputStream outputStream;
+    public HeartbeatTask(OutputStream outputStream) {
+        this.outputStream = outputStream;
+    }
+    private int index = 0;
     public void run() {
-//        String data = "{\"topid\" : \"100000\",\"data\" : {},\"extdata\" : {\"appversion\" : \"1.6.1\",\"termtype\" : \"2\",\"sourcetype\" : \"0\",}}";
-//        this.socketBuffer.write(data);
+        try {
+            String data = "{\"topid\" : \"100000\",\"data\" : {\"time\":" + System.currentTimeMillis() + "},\"extdata\" : {\"appversion\" : \"1.6.1\",\"termtype\" : \"2\",\"sourcetype\" : \"0\",}}";
+            byte[] bytes = NetworkUtil.getWriteData(data);
+            this.outputStream.write(bytes);
+        }
+        catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

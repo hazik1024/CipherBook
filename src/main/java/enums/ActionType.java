@@ -5,19 +5,19 @@ public enum ActionType {
     keepalive(100000, "心跳");
 
 
-    private int code;
+    private int topid;
     private String name;
 
-    public int getCode() {
-        return code;
+    public int getTopid() {
+        return topid;
     }
 
     public String getName() {
         return name;
     }
 
-    ActionType(int code, String name) {
-        this.code = code;
+    ActionType(int topid, String name) {
+        this.topid = topid;
         this.name = name;
     }
 }

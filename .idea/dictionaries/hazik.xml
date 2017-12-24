@@ -2,14 +2,20 @@
   <dictionary name="hazik">
     <words>
       <w>appversion</w>
+      <w>bufferable</w>
+      <w>bufferf</w>
+      <w>clientport</w>
+      <w>datas</w>
       <w>extdata</w>
       <w>gatewayservice</w>
       <w>idcard</w>
       <w>keepalive</w>
+      <w>serverport</w>
       <w>sourcetype</w>
       <w>systemconfig</w>
       <w>termtype</w>
       <w>topid</w>
+      <w>writed</w>
     </words>
   </dictionary>
 </component>

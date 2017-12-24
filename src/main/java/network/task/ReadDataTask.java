@@ -1,31 +1,41 @@
 package network.task;
 
+import constants.Network;
+import network.socket.ReadDatable;
+import network.socket.ServerBuffer;
 import network.socket.Socketable;
+import util.NetworkUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.SocketException;
 
 public class ReadDataTask implements Runnable {
 
-    private InputStream stream;
-    private Socketable target;
-    public ReadDataTask(InputStream stream, Socketable target) {
-        this.target = target;
+    private InputStream inputStream;
+    private ServerBuffer serverBuffer;
+
+    private byte[] receiveData = new byte[0];
+
+    public ReadDataTask(InputStream inputStream, ServerBuffer serverBuffer) {
+        this.inputStream = inputStream;
+        this.serverBuffer = serverBuffer;
     }
 
     public void run() {
+        System.out.println("bufferId:" + this.serverBuffer.getBufferId() + " 读线程启动...");
         SocketException socketException = null;
         do {
             try {
-                byte[] bytes = new byte[8192];
-                int len = this.stream.read(bytes);
+                byte[] bytes = new byte[Network.bufferLength];
+                int len = this.inputStream.read(bytes);
                 if (len < 0) {
                     System.out.println("ReadDataTask break...");
                     break;
                 }
                 if (len > 0) {
-                    this.target.appendData(bytes, len);
+                    appendData(bytes, len);
                 }
             }
             catch (SocketException e1) {
@@ -39,11 +49,38 @@ public class ReadDataTask implements Runnable {
             }
         }
         while (!Thread.interrupted());
-        this.target.close(socketException);
+        this.serverBuffer.close(socketException);
     }
 
     public void close() {
-        Thread.currentThread().interrupt();
-        this.target = null;
+        if (!Thread.currentThread().isInterrupted()) {
+            Thread.currentThread().interrupt();
+        }
+        this.inputStream = null;
+        this.serverBuffer = null;
+    }
+
+    public void appendData(byte[] data, int len) {
+        byte[] bytes = new byte[this.receiveData.length + len];
+        System.arraycopy(this.receiveData, 0, bytes, 0, this.receiveData.length);
+        System.arraycopy(data, 0, bytes, this.receiveData.length, len);
+
+        while (true) {
+            //处理数据
+            int totalLen = NetworkUtil.getTotalLength(bytes);
+            if (totalLen <= Network.headLength || totalLen > bytes.length) {
+                break;
+            }
+            try {
+                byte[] body = NetworkUtil.getBody(bytes, totalLen);
+                String request = new String(body, Network.encoding);
+                this.serverBuffer.addReadRequest(request);
+            }
+            catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            bytes = NetworkUtil.clearData(bytes, totalLen);
+            this.receiveData = bytes;
+        }
     }
 }

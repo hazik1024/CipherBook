@@ -2,7 +2,7 @@ package enums;
 
 public enum ServiceType {
     gateway(0, "前置服务"),
-    bussiness(1, "业务服务");
+    business(1, "业务服务");
 
     private int type;
     private String name;

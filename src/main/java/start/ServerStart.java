@@ -2,6 +2,7 @@ package start;
 
 
 import config.StartupConfig;
+import constants.Network;
 import network.socket.SocketClient;
 import settings.NetworkSetting;
 import org.jdom2.DataConversionException;
@@ -9,6 +10,7 @@ import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.Document;
 import org.jdom2.input.SAXBuilder;
+import settings.ServiceSetting;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -67,14 +69,13 @@ public class ServerStart {
             }
         }
 
-        //启动SocketServer和SocketClient
+        //启动Service
         try
         {
-//            SocketServer server = new SocketServer(NetworkSetting.getInstance().getServerPort());
-//            server.start();
-//            Thread.sleep(1000);
-//            SocketClient client = new SocketClient();
-//            client.connect(NetworkSetting.getInstance().getHost(), NetworkSetting.getInstance().getClientPort());
+            ServiceSetting.getInstance().initializeServices();
+            //发送心跳测试测试
+            SocketClient client = new SocketClient();
+            client.connect(Network.host, Network.port);
         }
         catch (Exception e)
         {
