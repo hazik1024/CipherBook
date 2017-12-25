@@ -12,7 +12,6 @@ public class HeartbeatTask extends TimerTask {
     public HeartbeatTask(OutputStream outputStream) {
         this.outputStream = outputStream;
     }
-    private int index = 0;
     public void run() {
         try {
             String data = "{\"topid\" : \"100000\",\"data\" : {\"time\":" + System.currentTimeMillis() + "},\"extdata\" : {\"appversion\" : \"1.6.1\",\"termtype\" : \"2\",\"sourcetype\" : \"0\",}}";

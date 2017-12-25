@@ -28,7 +28,7 @@ public class ReadDataTask implements Runnable {
 
     public void run() {
         log.info("bufferId:" + this.serverBuffer.getBufferId() + " 读线程启动...");
-        SocketException socketException = null;
+        boolean running = true;
         do {
             try {
                 byte[] bytes = new byte[Network.bufferLength];
@@ -43,16 +43,15 @@ public class ReadDataTask implements Runnable {
             }
             catch (SocketException e1) {
                 e1.printStackTrace();
-                socketException = e1;
-                break;
+                running = false;
             }
             catch (IOException e) {
                 e.printStackTrace();
-                break;
+                running = false;
             }
         }
-        while (!Thread.interrupted());
-        this.serverBuffer.close(socketException);
+        while (running && !Thread.interrupted());
+        this.serverBuffer.close();
     }
 
     public void close() {

@@ -68,14 +68,6 @@ public class GatewayService extends BaseService implements SocketBufferable {
 
 
     /*SocketBufferable*/
-    public void bufferReceive(String data) {
-
-    }
-
-    public void bufferWrite(Integer actionCode) {
-
-    }
-
     public void bufferClose(Integer bufferId) {
         ServiceSetting.getInstance().removeServerBufferf(bufferId);
     }

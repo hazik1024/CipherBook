@@ -21,10 +21,10 @@ public class DBSetting {
     }
 
     private DBSetting() {
-        this.databases = new HashMap<String, Database>();
+
     }
 
-    private HashMap<String, Database> databases;
+    private HashMap<String, Database> databases = new HashMap<String, Database>();
 
     public void loadDatabase(String name, int type, String filename) {
         try {

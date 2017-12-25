@@ -9,6 +9,7 @@ public class RequestAction {
     private int bufferId;
     @JSONField(name = "topid")
     private Integer topid;
+    @JSONField(name = "sid", serialize = false)
     private String sid;
 
     @JSONField(name = "data")

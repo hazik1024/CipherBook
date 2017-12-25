@@ -26,7 +26,6 @@ public class ServerBuffer implements Socketable, ReadDatable, WriteDatable {
     private ReadDataTask readDataTask;
     private WriteDataTask writeDataTask;
 
-
     public ServerBuffer(Socket socket, SocketBufferable target, int bufferId) throws IOException {
         this.socket = socket;
         this.target = target;
@@ -43,7 +42,7 @@ public class ServerBuffer implements Socketable, ReadDatable, WriteDatable {
         new Thread(this.readDataTask).start();
     }
 
-    public void close(SocketException e) {
+    public synchronized void close() {
         try {
             if (this.readDataTask != null) {
                 this.readDataTask.close();
@@ -69,6 +68,7 @@ public class ServerBuffer implements Socketable, ReadDatable, WriteDatable {
         catch (IOException e1) {
             e1.printStackTrace();
         }
+        target.bufferClose(this.getBufferId());
     }
 
     public void addReadRequest(String request) {

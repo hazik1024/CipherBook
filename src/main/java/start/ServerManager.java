@@ -15,6 +15,9 @@ public class ServerManager {
     public static  ServerManager getInstance() {
         return  instance;
     }
+    private ServerManager() {
+
+    }
 
     public void loadDatabase(Element database) throws DataConversionException {
         List<Element> elements = database.getChildren();

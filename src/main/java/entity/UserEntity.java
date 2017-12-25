@@ -2,11 +2,20 @@ package entity;
 
 public class UserEntity {
 
+    private String sid;
     private int uid;
     private String name;
     private String mobile;
     private int age;
     private String idcard;
+
+    public String getSid() {
+        return sid;
+    }
+
+    public void setSid(String sid) {
+        this.sid = sid;
+    }
 
     public int getUid() {
         return uid;

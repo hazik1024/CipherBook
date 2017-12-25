@@ -11,6 +11,10 @@ public class DBFactory {
         return instance;
     }
 
+    private DBFactory() {
+
+    }
+
     public Database getDatabase(DatabaseType type) {
 //        switch (type) {
 //            case Oracle:

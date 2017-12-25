@@ -61,7 +61,7 @@ public class WriteDataTask implements Runnable {
             e.printStackTrace();
         }
         finally {
-            close();
+            serverBuffer.close();
         }
     }
 }

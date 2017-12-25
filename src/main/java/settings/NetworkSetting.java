@@ -7,6 +7,9 @@ public class NetworkSetting {
     public static NetworkSetting getInstance() {
         return instance;
     }
+    private NetworkSetting() {
+
+    }
 
     private String host;
     private int clientPort;
