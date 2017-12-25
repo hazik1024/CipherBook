@@ -2,7 +2,7 @@ package service;
 
 import enums.ServiceStatus;
 import enums.ServiceType;
-import network.actions.BaseAction;
+import network.actions.RequestAction;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -21,7 +21,7 @@ public abstract class BaseService implements Runnable, Serviceable {
     }
 
     public abstract Integer getActionCode();
-    public abstract void addAction(BaseAction action);
+    public abstract void addAction(RequestAction action);
 
     /*
      * Runnable

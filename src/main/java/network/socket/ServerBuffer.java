@@ -1,13 +1,12 @@
 package network.socket;
 
 import com.alibaba.fastjson.JSON;
-import network.actions.BaseAction;
+import network.actions.RequestAction;
 import network.task.ReadDataTask;
 import network.task.WriteDataTask;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import settings.ServiceSetting;
-import start.ServerStart;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -73,7 +72,7 @@ public class ServerBuffer implements Socketable, ReadDatable, WriteDatable {
     }
 
     public void addReadRequest(String request) {
-        BaseAction baseAction = JSON.parseObject(request, BaseAction.class);
+        RequestAction baseAction = JSON.parseObject(request, RequestAction.class);
         baseAction.setBufferId(this.getBufferId());
         baseAction.setInitialData(request);
         ServiceSetting.getInstance().getService(baseAction.getTopid()).addAction(baseAction);
@@ -83,7 +82,7 @@ public class ServerBuffer implements Socketable, ReadDatable, WriteDatable {
         log.info("bufferId:" + this.getBufferId() + "回复成功:" + type);
     }
 
-    public void addSendAction(BaseAction baseAction) {
+    public void addSendAction(RequestAction baseAction) {
         this.writeDataTask.addWriteData(baseAction);
     }
 

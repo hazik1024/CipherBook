@@ -1,21 +1,27 @@
 package network.actions;
 
-import enums.ActionType;
+import com.alibaba.fastjson.annotation.JSONField;
 
 public class KeepAliveAction extends BaseAction {
 
-    @Override
-    public String pack() {
-        return "";
+    @JSONField(name="time")
+    private long time;
+    @JSONField(name="bufferid")
+    private int bufferId;
+
+    public long getTime() {
+        return time;
     }
 
-    @Override
-    public void unpack() {
-
+    public void setTime(long time) {
+        this.time = time;
     }
 
-    @Override
-    public Integer getTopid() {
-        return ActionType.keepalive.getTopid();
+    public int getBufferId() {
+        return bufferId;
+    }
+
+    public void setBufferId(int bufferId) {
+        this.bufferId = bufferId;
     }
 }

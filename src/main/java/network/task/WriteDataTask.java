@@ -1,6 +1,6 @@
 package network.task;
 
-import network.actions.BaseAction;
+import network.actions.RequestAction;
 import network.socket.ServerBuffer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,14 +17,14 @@ public class WriteDataTask implements Runnable {
     private OutputStream outputStream;
     private ServerBuffer serverBuffer;
 
-    private LinkedBlockingQueue<BaseAction> writeDatas = new LinkedBlockingQueue<BaseAction>();
+    private LinkedBlockingQueue<RequestAction> writeDatas = new LinkedBlockingQueue<RequestAction>();
 
     public WriteDataTask(OutputStream outputStream, ServerBuffer serverBuffer) {
         this.outputStream = outputStream;
         this.serverBuffer = serverBuffer;
     }
 
-    public void addWriteData(BaseAction baseAction) {
+    public void addWriteData(RequestAction baseAction) {
         try {
             writeDatas.put(baseAction);
         } catch (InterruptedException e) {
@@ -45,7 +45,7 @@ public class WriteDataTask implements Runnable {
         log.info("bufferId:" + this.serverBuffer.getBufferId() + " 写线程启动...");
         try {
             while(!Thread.currentThread().isInterrupted()) {
-                BaseAction action = this.writeDatas.take();
+                RequestAction action = this.writeDatas.take();
                 byte[] bytes = NetworkUtil.getWriteData(action.pack());
                 this.outputStream.write(bytes);
                 serverBuffer.writed(action.getTopid());

@@ -3,7 +3,7 @@ package service;
 import constants.Network;
 import enums.ActionType;
 import enums.ServiceType;
-import network.actions.BaseAction;
+import network.actions.RequestAction;
 import network.socket.ServerBuffer;
 import network.socket.SocketBufferable;
 import settings.NetworkSetting;
@@ -23,11 +23,11 @@ public class GatewayService extends BaseService implements SocketBufferable {
 
     @Override
     public Integer getActionCode() {
-        return ActionType.gateway.getTopid();
+        return ActionType.gateway.getCode();
     }
 
     @Override
-    public void addAction(BaseAction action) {
+    public void addAction(RequestAction action) {
 
     }
 

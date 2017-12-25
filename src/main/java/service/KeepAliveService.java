@@ -1,15 +1,17 @@
 package service;
 
 import enums.ActionType;
+import enums.ServiceCode;
 import enums.ServiceType;
-import network.actions.BaseAction;
+import network.actions.KeepAliveAction;
+import network.actions.RequestAction;
 import settings.ServiceSetting;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class KeepAliveService extends BaseService {
 
-    LinkedBlockingQueue<BaseAction> queue = new LinkedBlockingQueue<BaseAction>();
+    private LinkedBlockingQueue<RequestAction> queue = new LinkedBlockingQueue<RequestAction>();
 
     public KeepAliveService() {
         super(ServiceType.business, "心跳服务");
@@ -18,9 +20,14 @@ public class KeepAliveService extends BaseService {
     public void running() {
         while(true) {
             try {
-                BaseAction action = queue.take();
-                log.info(action.getTopid() + ", "+ action.getBufferId() + ", " + action.getData().toJSONString());
-                ServiceSetting.getInstance().getServerBuffer(action.getBufferId()).addSendAction(action);
+                RequestAction requestAction = queue.take();
+                KeepAliveAction action = new KeepAliveAction();
+                action.setTime(requestAction.getData().getLong("time"));
+                action.setBufferId(requestAction.getBufferId());
+                requestAction.setBaseAction(action);
+                requestAction.setServiceCode(ServiceCode.success);
+                log.info(requestAction.getTopid() + ", "+ requestAction.getBufferId() + ", " + requestAction.getData().toJSONString());
+                ServiceSetting.getInstance().getServerBuffer(requestAction.getBufferId()).addSendAction(requestAction);
             }
             catch (InterruptedException e) {
                 e.printStackTrace();
@@ -30,12 +37,12 @@ public class KeepAliveService extends BaseService {
 
     @Override
     public Integer getActionCode() {
-        return ActionType.keepalive.getTopid();
+        return ActionType.keepalive.getCode();
     }
 
-    public void addAction(BaseAction baseAction) {
+    public void addAction(RequestAction requestAction) {
         try {
-            this.queue.put(baseAction);
+            this.queue.put(requestAction);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
