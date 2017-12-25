@@ -3,8 +3,11 @@ package service;
 import enums.ServiceStatus;
 import enums.ServiceType;
 import network.actions.BaseAction;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public abstract class BaseService implements Runnable, Serviceable {
+    public Log log = LogFactory.getLog(this.getClass());
 
     private Thread thread;
     private ServiceStatus status;
@@ -26,7 +29,7 @@ public abstract class BaseService implements Runnable, Serviceable {
     public void run() {
         this.status = ServiceStatus.ready;
         ready();
-        System.out.println(this.getName() + "运行中...");
+        log.info(this.getName() + "运行中...");
         this.status = ServiceStatus.running;
         running();
     }
@@ -42,7 +45,7 @@ public abstract class BaseService implements Runnable, Serviceable {
         Thread thread = new Thread(this, this.getClass().getName() + ".thread");
         thread.start();
         this.thread = thread;
-        System.out.println("[" + this.getClass().getName() + ":" + this.getName() + "]启动...");
+        log.info("[" + this.getClass().getName() + ":" + this.getName() + "]启动...");
     }
 
     public void stop() {

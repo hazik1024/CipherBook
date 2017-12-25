@@ -1,17 +1,20 @@
 package db;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 public abstract class BaseDB {
-
+    private static Log log = LogFactory.getLog(BaseDB.class);
     static {
         try {
             Class.forName(getClassName());
         }
         catch (ClassNotFoundException e1) {
-            System.out.println("加载MySql驱动失败:找不到类");
+            log.error("加载MySql驱动失败:找不到类");
         }
     }
 

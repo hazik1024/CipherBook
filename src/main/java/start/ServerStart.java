@@ -4,6 +4,8 @@ package start;
 import config.StartupConfig;
 import constants.Network;
 import network.socket.SocketClient;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import settings.NetworkSetting;
 import org.jdom2.DataConversionException;
 import org.jdom2.Element;
@@ -16,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class ServerStart {
+    private static Log log = LogFactory.getLog(ServerStart.class);
     public static void main(String[] args) {
         //加载配置文件
         SAXBuilder builder = new SAXBuilder();
@@ -25,15 +28,15 @@ public class ServerStart {
             doc = builder.build(inputStream);
         }
         catch (IOException e) {
-            System.out.println("找不到systemconfig.xml文件");
+            log.info("找不到systemconfig.xml文件");
             e.printStackTrace();
         }
         catch (JDOMException e) {
-            System.out.println("找不到systemconfig.xml文件");
+            log.info("找不到systemconfig.xml文件");
             e.printStackTrace();
         }
         if (doc == null) {
-            System.out.println("找不到systemconfig.xml文件");
+            log.info("找不到systemconfig.xml文件");
             return;
         }
 
@@ -48,7 +51,7 @@ public class ServerStart {
                 return;
             }
         }
-        //读取network配置
+        //读取网络配置
         Element network = root.getChild("network");
         if (network != null) {
             Element socket = network.getChild("socket");
@@ -70,12 +73,15 @@ public class ServerStart {
         }
 
         //启动Service
+        ServerManager.getInstance().loadServices();
+
+        //发送心跳测试测试
         try
         {
-            ServiceSetting.getInstance().initializeServices();
-            //发送心跳测试测试
-            SocketClient client = new SocketClient();
-            client.connect(Network.host, Network.port);
+            for (int i = 0; i < 1; i++) {
+                SocketClient client = new SocketClient();
+                client.connect(Network.host, Network.port);
+            }
         }
         catch (Exception e)
         {

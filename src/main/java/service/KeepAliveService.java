@@ -19,7 +19,7 @@ public class KeepAliveService extends BaseService {
         while(true) {
             try {
                 BaseAction action = queue.take();
-                System.out.println(action.getTopid() + ", "+ action.getBufferId() + ", " + action.getData().toJSONString());
+                log.info(action.getTopid() + ", "+ action.getBufferId() + ", " + action.getData().toJSONString());
                 ServiceSetting.getInstance().getServerBuffer(action.getBufferId()).addSendAction(action);
             }
             catch (InterruptedException e) {

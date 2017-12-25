@@ -1,22 +1,22 @@
 package network.socket;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import network.actions.BaseAction;
 import network.task.ReadDataTask;
 import network.task.WriteDataTask;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import settings.ServiceSetting;
+import start.ServerStart;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.concurrent.LinkedBlockingQueue;
 
 public class ServerBuffer implements Socketable, ReadDatable, WriteDatable {
-
-//    private Thread thread;
+    private Log log = LogFactory.getLog(ServerBuffer.class);
     private Socket socket;
     private InputStream inputStream;
     private OutputStream outputStream;
@@ -73,22 +73,14 @@ public class ServerBuffer implements Socketable, ReadDatable, WriteDatable {
     }
 
     public void addReadRequest(String request) {
-        JSONObject json = JSON.parseObject(request);
-        Integer topid = json.getInteger("topid");
-        JSONObject data = json.getJSONObject("data");
-        JSONObject extdata = json.getJSONObject("extdata");
-
-        BaseAction action = new BaseAction();
-        action.setTopid(topid);
-        action.setData(data);
-        action.setExtdata(extdata);
-        action.setBufferId(getBufferId());
-        action.setInitialData(request);
-        ServiceSetting.getInstance().getService(topid).addAction(action);
+        BaseAction baseAction = JSON.parseObject(request, BaseAction.class);
+        baseAction.setBufferId(this.getBufferId());
+        baseAction.setInitialData(request);
+        ServiceSetting.getInstance().getService(baseAction.getTopid()).addAction(baseAction);
     }
 
     public void writed(Integer type) {
-        System.out.println("bufferId:" + this.getBufferId() + "回复成功:" + type);
+        log.info("bufferId:" + this.getBufferId() + "回复成功:" + type);
     }
 
     public void addSendAction(BaseAction baseAction) {

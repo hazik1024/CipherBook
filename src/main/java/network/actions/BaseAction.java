@@ -1,20 +1,24 @@
 package network.actions;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.annotation.JSONField;
 
 public class BaseAction {
-
+    @JSONField(serialize=false)
     private int bufferId;
+    @JSONField(name = "topid")
     private Integer topid;
     private String sid;
 
+    @JSONField(name = "data")
     private JSONObject data;
+    @JSONField(name = "extdata")
     private JSONObject extdata;
-
+    @JSONField(serialize=false)
     private String initialData;
 
     public String pack(){
-        return "";
+        return this.getInitialData();
     }
 
     public void unpack(){

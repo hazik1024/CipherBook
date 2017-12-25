@@ -7,13 +7,16 @@ import service.KeepAliveService;
 
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class ServiceSetting {
 
     private static ServiceSetting instance = new ServiceSetting();
     public static ServiceSetting getInstance() {
         return instance;
+    }
+
+    private ServiceSetting() {
+        initializeServices();
     }
 
     //服务集合
@@ -36,10 +39,12 @@ public class ServiceSetting {
         return this.services.get(actionCode);
     }
 
-    public void initializeServices() {
+    private void initializeServices() {
         putService(new GatewayService());
         putService(new KeepAliveService());
+    }
 
+    public void startServices() {
         for (BaseService service : this.services.values()) {
             service.start();
         }

@@ -1,7 +1,11 @@
 package network.socket;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import constants.Network;
 import network.task.HeartbeatTask;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import settings.NetworkSetting;
 import util.NetworkUtil;
 
@@ -15,6 +19,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class SocketClient {
+
+    private static Log log = LogFactory.getLog(SocketClient.class);
+
     private Socket socket;
     private String host;
     private int port;
@@ -51,13 +58,13 @@ public class SocketClient {
             new Thread(new Runnable() {
                 private byte[] receiveData = new byte[0];
                 public void run() {
-                    System.out.println("socketClient开始接收");
+                    log.info("socketClient开始接收");
                     do {
                         try {
                             byte[] tmpBytes = new byte[Network.bufferLength];
                             int len = socket.getInputStream().read(tmpBytes);
                             if (len < 0) {
-                                System.out.println("ReadDataTask break...");
+                                log.info("ReadDataTask break...");
                                 break;
                             }
                             if (len > 0) {
@@ -74,7 +81,12 @@ public class SocketClient {
                                     try {
                                         byte[] body = NetworkUtil.getBody(bytes, totalLen);
                                         String response = new String(body, Network.encoding);
-                                        System.out.println("[" + this.toString() + "]收到响应:" + response);
+                                        long end = System.currentTimeMillis();
+                                        JSONObject json = JSON.parseObject(response);
+                                        JSONObject data = json.getJSONObject("data");
+                                        long time = data.getLong("time");
+                                        log.info("耗时[" + (end - time) + "]millseconds[" + this.toString() + "]收到响应:" + response);
+
                                     }
                                     catch (UnsupportedEncodingException e) {
                                         e.printStackTrace();
@@ -97,7 +109,7 @@ public class SocketClient {
                 }
             }).start();
             heartbeatTask = new HeartbeatTask(socket.getOutputStream());
-            new Timer().schedule(heartbeatTask, 5000, 5000);
+            new Timer().schedule(heartbeatTask, 2000, 5000);
         }
         catch (IOException e)
         {
