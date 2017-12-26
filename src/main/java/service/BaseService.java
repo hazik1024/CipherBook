@@ -1,18 +1,25 @@
 package service;
 
+import enums.ActionType;
 import enums.ServiceStatus;
 import enums.ServiceType;
 import network.actions.RequestAction;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import settings.ServiceSetting;
+
+import java.util.concurrent.LinkedBlockingQueue;
 
 public abstract class BaseService implements Runnable, Serviceable {
-    public Log log = LogFactory.getLog(this.getClass());
+    protected Log log = LogFactory.getLog(this.getClass());
+
+    private LinkedBlockingQueue<RequestAction> requestQueue = new LinkedBlockingQueue<RequestAction>();
 
     private Thread thread;
     private ServiceStatus status;
     private ServiceType type;
     private String name;
+    private boolean running = true;
 
     public BaseService(ServiceType type, String name) {
         this.name = name;
@@ -20,8 +27,15 @@ public abstract class BaseService implements Runnable, Serviceable {
         this.status = ServiceStatus.stop;
     }
 
-    public abstract Integer getActionCode();
-    public abstract void addAction(RequestAction action);
+    public abstract ActionType getActionType();
+
+    public void addRequestAction(RequestAction requestAction) {
+        try {
+            this.requestQueue.put(requestAction);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
     /*
      * Runnable
@@ -41,6 +55,22 @@ public abstract class BaseService implements Runnable, Serviceable {
 
     }
 
+    public void running() {
+        while (running) {
+            try {
+                RequestAction requestAction = requestQueue.take();
+                processing(requestAction);
+                processed(requestAction);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void processed(RequestAction requestAction) {
+        ServiceSetting.getInstance().getServerBuffer(requestAction.getBufferId()).addSendAction(requestAction);
+    }
+
     public void start() {
         Thread thread = new Thread(this, this.getClass().getName() + ".thread");
         thread.start();
@@ -50,7 +80,9 @@ public abstract class BaseService implements Runnable, Serviceable {
 
     public void stop() {
         this.status = ServiceStatus.stop;
+        this.running = false;
         this.thread.interrupt();
+        this.requestQueue.clear();
         this.thread = null;
     }
 

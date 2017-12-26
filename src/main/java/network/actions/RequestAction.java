@@ -32,10 +32,6 @@ public class RequestAction {
         return response.toJSONString();
     }
 
-    public void unpack(){
-
-    }
-
 
     public int getBufferId() {
         return bufferId;

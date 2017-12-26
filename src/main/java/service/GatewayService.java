@@ -22,13 +22,8 @@ public class GatewayService extends BaseService implements SocketBufferable {
     }
 
     @Override
-    public Integer getActionCode() {
-        return ActionType.gateway.getCode();
-    }
-
-    @Override
-    public void addAction(RequestAction action) {
-
+    public ActionType getActionType() {
+        return ActionType.gateway;
     }
 
     @Override
@@ -61,14 +56,27 @@ public class GatewayService extends BaseService implements SocketBufferable {
         }
     }
 
+    public void processing(RequestAction requestAction) {
+
+    }
+
     @Override
     public void stop() {
         super.stop();
+        ServiceSetting.getInstance().removeAllServerBuffer();
+        try {
+            this.serverSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            this.serverSocket = null;
+        }
     }
 
 
     /*SocketBufferable*/
     public void bufferClose(Integer bufferId) {
-        ServiceSetting.getInstance().removeServerBufferf(bufferId);
+        ServiceSetting.getInstance().removeServerBuffer(bufferId);
     }
 }

@@ -75,7 +75,7 @@ public class ServerBuffer implements Socketable, ReadDatable, WriteDatable {
         RequestAction baseAction = JSON.parseObject(request, RequestAction.class);
         baseAction.setBufferId(this.getBufferId());
         baseAction.setInitialData(request);
-        ServiceSetting.getInstance().getService(baseAction.getTopid()).addAction(baseAction);
+        ServiceSetting.getInstance().getService(baseAction.getTopid()).addRequestAction(baseAction);
     }
 
     public void writed(Integer type) {

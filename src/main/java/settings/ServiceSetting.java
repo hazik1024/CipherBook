@@ -23,20 +23,30 @@ public class ServiceSetting {
     private HashMap<Integer, BaseService> services = new HashMap<Integer, BaseService>();
 
     public void putService(BaseService service) {
-        this.services.put(service.getActionCode(), service);
+        this.services.put(service.getActionType().getCode(), service);
     }
     public void removeService(Integer actionCode) {
+        stopService(actionCode);
         this.services.remove(actionCode);
     }
     public void removeService(BaseService service) {
-        this.services.remove(service.getActionCode());
+        stopService(service.getActionType().getCode());
+        this.services.remove(service.getActionType().getCode());
     }
     public void removeAllService() {
+        for (BaseService baseService : this.services.values()) {
+            baseService.stop();
+        }
         this.services.clear();
     }
 
     public BaseService getService(Integer actionCode) {
         return this.services.get(actionCode);
+    }
+
+    public void stopService(Integer actionCode) {
+        BaseService baseService = this.getService(actionCode);
+        baseService.stop();
     }
 
     private void initializeServices() {
@@ -59,8 +69,14 @@ public class ServiceSetting {
     public void putServerBuffer(ServerBuffer buffer) {
         buffers.put(buffer.getBufferId(), buffer);
     }
-    public void removeServerBufferf(Integer bufferId) {
+    public void removeServerBuffer(Integer bufferId) {
         buffers.remove(bufferId);
+    }
+    public void removeAllServerBuffer() {
+        for (ServerBuffer buffer : buffers.values()) {
+            buffer.close();
+        }
+        buffers.clear();
     }
     public int getServerBufferCount() {
         return buffers.size();
