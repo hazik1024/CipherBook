@@ -2,6 +2,12 @@
     <database>
         <db name="mysql" type="2" filename="mysql.properties"></db>
     </database>
+    <redis>
+        <config mastername="mymaster" maxtotal="200" maxidle="8" minidle="0" timebetweenvictionrunsmillis="60000" testonborrow="true" testonreturn="true" timeout="5000"></config>
+        <sentinels>
+            <sentinel host="120.79.22.95:26379"></sentinel>
+        </sentinels>
+    </redis>
     <network>
         <socket host="127.0.0.1" clientport="55521" serverport="55521" timeout="4000"></socket>
     </network>

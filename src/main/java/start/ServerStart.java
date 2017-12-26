@@ -12,10 +12,13 @@ import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.Document;
 import org.jdom2.input.SAXBuilder;
-import settings.ServiceSetting;
+import settings.RedisSetting;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ServerStart {
     private static Log log = LogFactory.getLog(ServerStart.class);
@@ -69,6 +72,42 @@ public class ServerStart {
                 catch (DataConversionException e) {
                     e.printStackTrace();
                 }
+            }
+        }
+        //读取Redis配置
+        Element redis = root.getChild("redis");
+        if (network != null) {
+            Element config = redis.getChild("config");
+            if (config != null) {
+                try {
+                    String mastername = config.getAttributeValue("mastername");
+                    int maxtotal = config.getAttribute("maxtotal").getIntValue();
+                    int maxidle = config.getAttribute("maxidle").getIntValue();
+                    int minidle = config.getAttribute("minidle").getIntValue();
+                    int timebetweenvictionrunsmillis = config.getAttribute("timebetweenvictionrunsmillis").getIntValue();
+                    boolean testonborrow = config.getAttribute("testonborrow").getBooleanValue();
+                    boolean testonreturn = config.getAttribute("testonreturn").getBooleanValue();
+                    int timeout = config.getAttribute("timeout").getIntValue();
+                    RedisSetting.getInstance().setMastername(mastername);
+                    RedisSetting.getInstance().setMaxtotal(maxtotal);
+                    RedisSetting.getInstance().setMaxidle(maxidle);
+                    RedisSetting.getInstance().setMinidle(minidle);
+                    RedisSetting.getInstance().setTimebetweenvictionrunsmillis(timebetweenvictionrunsmillis);
+                    RedisSetting.getInstance().setTestonborrow(testonborrow);
+                    RedisSetting.getInstance().setTestonreturn(testonreturn);
+                    RedisSetting.getInstance().setTimeout(timeout);
+                }
+                catch (DataConversionException e) {
+                    e.printStackTrace();
+                }
+            }
+            Element sentinels = redis.getChild("sentinels");
+            if (sentinels != null) {
+                Set<String> list = new HashSet<String>();
+                for (Element sentinel : sentinels.getChildren()) {
+                    list.add(sentinel.getAttributeValue("host"));
+                }
+                RedisSetting.getInstance().setSentinels(list);
             }
         }
 

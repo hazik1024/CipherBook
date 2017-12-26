@@ -2,6 +2,7 @@ package service;
 
 import enums.ActionType;
 import enums.ServiceType;
+import network.actions.LoginAction;
 import network.actions.RequestAction;
 
 /**
@@ -17,6 +18,9 @@ public class LoginService extends BaseService {
     }
 
     public void processing(RequestAction requestAction) {
-
+        LoginAction loginAction = new LoginAction();
+        loginAction.setUser(requestAction.getData().getString("username"));
+        loginAction.setPassword(requestAction.getData().getString("password"));
+        requestAction.setBaseAction(loginAction);
     }
 }

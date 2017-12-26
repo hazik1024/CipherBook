@@ -21,14 +21,8 @@ public class GatewayService extends BaseService implements SocketBufferable {
         super(ServiceType.gateway, "前置服务");
     }
 
-    @Override
     public ActionType getActionType() {
         return ActionType.gateway;
-    }
-
-    @Override
-    public void ready() {
-        super.ready();
     }
 
     private int port = NetworkSetting.getInstance().getServerPort();
@@ -60,7 +54,6 @@ public class GatewayService extends BaseService implements SocketBufferable {
 
     }
 
-    @Override
     public void stop() {
         super.stop();
         ServiceSetting.getInstance().removeAllServerBuffer();

@@ -22,6 +22,10 @@ public class ServiceSetting {
     //服务集合
     private HashMap<Integer, BaseService> services = new HashMap<Integer, BaseService>();
 
+    public BaseService getService(Integer actionCode) {
+        return this.services.get(actionCode);
+    }
+
     public void putService(BaseService service) {
         this.services.put(service.getActionType().getCode(), service);
     }
@@ -30,18 +34,13 @@ public class ServiceSetting {
         this.services.remove(actionCode);
     }
     public void removeService(BaseService service) {
-        stopService(service.getActionType().getCode());
-        this.services.remove(service.getActionType().getCode());
+        removeService(service.getActionType().getCode());
     }
     public void removeAllService() {
         for (BaseService baseService : this.services.values()) {
             baseService.stop();
         }
         this.services.clear();
-    }
-
-    public BaseService getService(Integer actionCode) {
-        return this.services.get(actionCode);
     }
 
     public void stopService(Integer actionCode) {
@@ -70,6 +69,7 @@ public class ServiceSetting {
         buffers.put(buffer.getBufferId(), buffer);
     }
     public void removeServerBuffer(Integer bufferId) {
+        getServerBuffer(bufferId).close();
         buffers.remove(bufferId);
     }
     public void removeAllServerBuffer() {
