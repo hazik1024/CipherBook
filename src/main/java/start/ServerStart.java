@@ -2,8 +2,8 @@ package start;
 
 
 import config.StartupConfig;
-import constants.Network;
-import network.socket.SocketClient;
+import db.HibernateOperator;
+import network.redis.JedisClient;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import settings.NetworkSetting;
@@ -16,9 +16,7 @@ import settings.RedisSetting;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class ServerStart {
     private static Log log = LogFactory.getLog(ServerStart.class);
@@ -45,15 +43,17 @@ public class ServerStart {
 
         Element root = doc.getRootElement();
         //取数据库配置
-        Element database = root.getChild("database");
-        if (database != null) {
-            try {
-                ServerManager.getInstance().loadDatabase(database);
-            } catch (DataConversionException e) {
-                e.printStackTrace();
-                return;
-            }
-        }
+//        Element database = root.getChild("database");
+//        if (database != null) {
+//            try {
+//                ServerManager.getInstance().loadDatabase(database);
+//            } catch (DataConversionException e) {
+//                e.printStackTrace();
+//                return;
+//            }
+//        }
+        //初始化hibernate
+        HibernateOperator.getInstance().initHibernate();
         //读取网络配置
         Element network = root.getChild("network");
         if (network != null) {
@@ -81,6 +81,7 @@ public class ServerStart {
             if (config != null) {
                 try {
                     String mastername = config.getAttributeValue("mastername");
+                    String password = config.getAttributeValue("password");
                     int maxtotal = config.getAttribute("maxtotal").getIntValue();
                     int maxidle = config.getAttribute("maxidle").getIntValue();
                     int minidle = config.getAttribute("minidle").getIntValue();
@@ -89,6 +90,7 @@ public class ServerStart {
                     boolean testonreturn = config.getAttribute("testonreturn").getBooleanValue();
                     int timeout = config.getAttribute("timeout").getIntValue();
                     RedisSetting.getInstance().setMastername(mastername);
+                    RedisSetting.getInstance().setPassword(password);
                     RedisSetting.getInstance().setMaxtotal(maxtotal);
                     RedisSetting.getInstance().setMaxidle(maxidle);
                     RedisSetting.getInstance().setMinidle(minidle);
@@ -105,26 +107,29 @@ public class ServerStart {
             if (sentinels != null) {
                 Set<String> list = new HashSet<String>();
                 for (Element sentinel : sentinels.getChildren()) {
-                    list.add(sentinel.getAttributeValue("host"));
+                    String host = sentinel.getAttributeValue("host");
+                    list.add(host);
                 }
                 RedisSetting.getInstance().setSentinels(list);
             }
+            //初始化Redis
+            JedisClient.getInstance().initClient();
         }
 
         //启动Service
         ServerManager.getInstance().loadServices();
 
         //发送心跳测试测试
-        try
-        {
-            for (int i = 0; i < 1; i++) {
-                SocketClient client = new SocketClient();
-                client.connect(Network.host, Network.port);
-            }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+//        try
+//        {
+//            for (int i = 0; i < 1; i++) {
+//                SocketClient client = new SocketClient();
+//                client.connect(Network.host, Network.port);
+//            }
+//        }
+//        catch (Exception e)
+//        {
+//            e.printStackTrace();
+//        }
     }
 }

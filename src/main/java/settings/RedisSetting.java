@@ -14,6 +14,7 @@ public class RedisSetting {
     }
 
     private String mastername;
+    private String password;
     private int maxtotal;
     private int maxidle;
     private int minidle;
@@ -29,6 +30,14 @@ public class RedisSetting {
 
     public void setMastername(String mastername) {
         this.mastername = mastername;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public int getMaxtotal() {

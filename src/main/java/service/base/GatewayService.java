@@ -1,4 +1,4 @@
-package service;
+package service.base;
 
 import constants.Network;
 import enums.ActionType;

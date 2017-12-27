@@ -1,14 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
 <root>
     <database>
-        <db name="mysql" type="2" filename="mysql.properties"></db>
+        <db name="mysql" type="2" filename="mysql.properties"/>
     </database>
     <redis>
-        <config mastername="mymaster" maxtotal="200" maxidle="8" minidle="0" timebetweenvictionrunsmillis="60000" testonborrow="true" testonreturn="true" timeout="5000"></config>
+        <config mastername="mymaster" password="myredis6379" maxtotal="200" maxidle="8" minidle="0"
+                timebetweenvictionrunsmillis="60000" testonborrow="true" testonreturn="true" timeout="30000"/>
         <sentinels>
-            <sentinel host="120.79.22.95:26379"></sentinel>
+            <sentinel host="120.79.22.95:26379"/>
+            <sentinel host="120.79.22.95:26389"/>
+            <sentinel host="120.79.22.95:26389"/>
         </sentinels>
     </redis>
     <network>
-        <socket host="127.0.0.1" clientport="55521" serverport="55521" timeout="4000"></socket>
+        <socket host="127.0.0.1" clientport="55521" serverport="55521" timeout="4000"/>
     </network>
 </root>

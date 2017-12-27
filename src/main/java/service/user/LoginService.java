@@ -1,9 +1,10 @@
-package service;
+package service.user;
 
 import enums.ActionType;
 import enums.ServiceType;
 import network.actions.LoginAction;
 import network.actions.RequestAction;
+import service.base.BaseService;
 
 /**
  * 登录服务

@@ -1,9 +1,11 @@
 package db;
 
+import entity.DataBaseEntity;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -18,22 +20,33 @@ public abstract class BaseDB {
         }
     }
 
-    public Database database;
+    private DataBaseEntity entity;
 
     public static String getClassName() {
         return "com.mysql.jdbc.Driver";
-    };
+    }
 
-    public BaseDB (Database database) {
-        this.database = database;
+    public BaseDB (DataBaseEntity entity) {
+        this.entity = entity;
     }
 
     private Connection connection = null;
+    public Connection getConnection() {
+        if (connection == null) {
+            try {
+                connection = DriverManager.getConnection(entity.getUrl(), entity.getUser(), entity.getPassword());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return connection;
+    }
 
     public Statement getStatement() {
-        if (this.connection != null) {
+        Connection connection = getConnection();
+        if (connection != null) {
             try {
-                return this.connection.createStatement();
+                return connection.createStatement();
             }
             catch (SQLException e) {
                 e.printStackTrace();
@@ -52,15 +65,21 @@ public abstract class BaseDB {
     }
 
     public void closeConnection() {
-        if (this.connection != null) {
+        closeConnection(this.connection);
+    }
+
+    public void closeConnection(Connection connection) {
+        if (connection != null) {
             try {
-                this.connection.close();
+                connection.close();
             }
             catch (SQLException e) {
                 e.printStackTrace();
             }
             finally {
-                this.connection = null;
+                if (connection == this.connection) {
+                    this.connection = null;
+                }
             }
         }
     }

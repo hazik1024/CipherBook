@@ -1,4 +1,4 @@
-package service;
+package service.base;
 
 import network.actions.RequestAction;
 

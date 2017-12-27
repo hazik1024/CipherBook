@@ -1,60 +1,35 @@
 package enums;
 
 public enum DatabaseType {
-    Oracle(1),
-
-    MySql(2),
-
-    DB2(3),
-
-    Sybase(4),
-
-    SqlServer(5),
-
-    MSAccess(6),
-
-    MemCache(7),
-
-    Redis(8),
-
-    Proxool(9)
-
+    mysql(1, "mysql"),
+    redis(2, "redis")
     ;
 
-    DatabaseType(int value)
+    DatabaseType(int value, String name)
     {
         this.value = value;
+        this.name = name;
     }
 
     private final int value;
+    private final String name;
 
     public int getValue()
     {
         return value;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public static DatabaseType getType(int value) {
-        switch (value) {
-            case 1:
-                return Oracle;
-            case 2:
-                return MySql;
-            case 3:
-                return DB2;
-            case 4:
-                return Sybase;
-            case 5:
-                return SqlServer;
-            case 6:
-                return MSAccess;
-            case 7:
-                return MemCache;
-            case 8:
-                return Redis;
-            case 9:
-                return Proxool;
-            default:
-                return MySql;
+        if (mysql.getValue() == value) {
+            return mysql;
         }
+        else if (redis.getValue() == value) {
+            return redis;
+        }
+        return mysql;
     }
 }

@@ -1,9 +1,11 @@
 package settings;
 
 import network.socket.ServerBuffer;
-import service.BaseService;
-import service.GatewayService;
-import service.KeepAliveService;
+import service.base.BaseService;
+import service.base.GatewayService;
+import service.base.KeepAliveService;
+import service.user.LoginService;
+import service.user.RegisterService;
 
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,7 +18,7 @@ public class ServiceSetting {
     }
 
     private ServiceSetting() {
-        initializeServices();
+
     }
 
     //服务集合
@@ -48,9 +50,11 @@ public class ServiceSetting {
         baseService.stop();
     }
 
-    private void initializeServices() {
+    public void initServices() {
         putService(new GatewayService());
         putService(new KeepAliveService());
+        putService(new LoginService());
+        putService(new RegisterService());
     }
 
     public void startServices() {

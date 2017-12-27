@@ -3,7 +3,8 @@ package enums;
 public enum ActionType {
     gateway(0, "gatewayservice"),
     keepalive(100000, "心跳"),
-    login(100101, "登录")
+    login(100101, "登录"),
+    register(100102, "注册")
     ;
 
 

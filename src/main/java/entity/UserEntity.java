@@ -1,21 +1,24 @@
 package entity;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "t_user")
 public class UserEntity {
-
-    private String sid;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "uid", unique = true, nullable = false)
     private int uid;
+    @Column(name = "name", nullable = false)
     private String name;
+    @Column(name = "password", nullable = false)
+    private String password;
+    @Column(name = "mobile")
     private String mobile;
+    @Column(name = "age")
     private int age;
+    @Column(name = "idcard")
     private String idcard;
-
-    public String getSid() {
-        return sid;
-    }
-
-    public void setSid(String sid) {
-        this.sid = sid;
-    }
 
     public int getUid() {
         return uid;
@@ -31,6 +34,14 @@ public class UserEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getMobile() {

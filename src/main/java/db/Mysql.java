@@ -1,8 +1,10 @@
 package db;
 
+import entity.DataBaseEntity;
+
 public class Mysql extends BaseDB {
 
-    public Mysql(Database db) {
-        super(db);
+    public Mysql(DataBaseEntity entity) {
+        super(entity);
     }
 }

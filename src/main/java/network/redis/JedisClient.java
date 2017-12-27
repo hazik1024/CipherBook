@@ -12,6 +12,10 @@ public class JedisClient {
     }
     private JedisSentinelPool pool;
     private JedisClient() {
+
+    }
+
+    public void initClient() {
         JedisPoolConfig config = new JedisPoolConfig();
         config.setMaxTotal(RedisSetting.getInstance().getMaxtotal());
         config.setMaxIdle(RedisSetting.getInstance().getMaxidle());
@@ -19,10 +23,16 @@ public class JedisClient {
         config.setTimeBetweenEvictionRunsMillis(RedisSetting.getInstance().getTimebetweenvictionrunsmillis());
         config.setTestOnBorrow(RedisSetting.getInstance().isTestonborrow());
         config.setTestOnReturn(RedisSetting.getInstance().isTestonreturn());
-        pool = new JedisSentinelPool(RedisSetting.getInstance().getMastername(),RedisSetting.getInstance().getSentinels(), config, RedisSetting.getInstance().getTimeout());
+        pool = new JedisSentinelPool(RedisSetting.getInstance().getMastername(),RedisSetting.getInstance().getSentinels(), config, RedisSetting.getInstance().getTimeout(), RedisSetting.getInstance().getPassword());
     }
 
     public Jedis getJedis() {
         return pool.getResource();
+    }
+
+    public void close() {
+        if (pool != null) {
+            pool.destroy();
+        }
     }
 }

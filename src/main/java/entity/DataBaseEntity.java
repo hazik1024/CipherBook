@@ -1,11 +1,11 @@
-package db;
+package entity;
 
 import enums.DatabaseType;
 
 import javax.xml.crypto.Data;
 import java.util.Properties;
 
-public class Database {
+public class DataBaseEntity {
 
     private String name;
     private DatabaseType type;
@@ -25,7 +25,7 @@ public class Database {
     private String statistics;
     private String logLevel;
 
-    public Database(String name, DatabaseType type, Properties properties) {
+    public DataBaseEntity(String name, DatabaseType type, Properties properties) {
         this.name = name;
         this.type = type;
         this.alias = properties.getProperty("alias");

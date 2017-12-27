@@ -28,6 +28,7 @@ public class ServerManager {
 
 
     public void loadServices() {
+        ServiceSetting.getInstance().initServices();
         ServiceSetting.getInstance().startServices();
     }
 }

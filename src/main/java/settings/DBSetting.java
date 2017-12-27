@@ -1,12 +1,13 @@
 package settings;
 
-import db.Database;
+import db.BaseDB;
+import db.Mysql;
+import entity.DataBaseEntity;
 import enums.DatabaseType;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -24,45 +25,50 @@ public class DBSetting {
 
     }
 
-    private HashMap<String, Database> databases = new HashMap<String, Database>();
-
     public void loadDatabase(String name, int type, String filename) {
         try {
             String filePath = DBSetting.propertyPath + filename;
             Properties properties = new Properties();
             properties.load(DBSetting.class.getResourceAsStream(filePath));
-            Database db = new Database(name, DatabaseType.getType(type), properties);
-            addDatabase(db);
+            DataBaseEntity entity = new DataBaseEntity(name, DatabaseType.getType(type), properties);
+            loadDataBase(entity);
         }
         catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public Database getDatabase(String dbName) {
-        return databases.get(dbName);
-    }
 
-    public void addDatabase(Database db) {
-        if (databases.containsKey(db.getName())) {
-            databases.remove(db.getName());
+
+    private HashMap<DatabaseType, BaseDB> databases = new HashMap<DatabaseType, BaseDB>();
+
+    private void loadDataBase(DataBaseEntity entity) {
+        switch (entity.getType()) {
+            case mysql:
+                databases.put(entity.getType(), new Mysql(entity));
+                break;
+            case redis:
+                break;
+            default:
+                break;
         }
-        databases.put(db.getName(), db);
     }
 
-    public void removeDatabase(Database db) {
-        databases.remove(db.getName());
+    public BaseDB getDataBase(DatabaseType type) {
+        return databases.get(type);
     }
 
-    public void removeAll() {
-        databases.clear();
+    public Connection getConnection(DatabaseType type) {
+        return databases.get(type).getConnection();
+    }
+    public void closeConnection(DatabaseType type, Connection connection) {
+        databases.get(type).closeConnection();
     }
 
-    public boolean checkDatabase(Database db) {
-        return databases.containsKey(db.getName());
+    public Statement getStatement(DatabaseType type) {
+        return databases.get(type).getStatement();
     }
-
-    public Connection getConnection(Database db) throws SQLException {
-        return DriverManager.getConnection(db.getUrl(), db.getUser(), db.getPassword());
+    public void closeStatement(DatabaseType type, Statement statement) {
+        databases.get(type).closeStatement(statement);
     }
 }
