@@ -11,6 +11,7 @@ import service.base.BaseService;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 登录服务
@@ -29,6 +30,10 @@ public class LoginService extends BaseService {
         loginAction.setUser(requestAction.getData().getString("username"));
         loginAction.setPassword(requestAction.getData().getString("password"));
         requestAction.setBaseAction(loginAction);
+
+        UserDao userDao = new UserDao();
+
+        UUID uuid = UUID.randomUUID();
     }
 
     @Override

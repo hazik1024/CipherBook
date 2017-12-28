@@ -1,69 +1,20 @@
 package dao;
 
-import db.HibernateOperator;
-import entity.BaseEntity;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-
-import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
-public abstract class GenericDao<T extends BaseEntity, K extends Serializable> {
-    protected Logger logger = LogManager.getLogger(this.getClass());
+public interface GenericDao<T> {
+    void save(T entity);
 
-    protected Session getSession() {
-        return HibernateOperator.getInstance().getSession();
-    }
+    void delete(T entity);
 
-    private void closeSession(Session session) {
-        session.close();
-    }
+    void update(T entity);
 
-    public void save(T entity) {
-        Session session = getSession();
-        Transaction transaction = session.beginTransaction();
-        session.save(entity);
-        transaction.commit();
-        session.close();
-    }
+    T query(final String queryString);
 
-    public void delete(T entity) {
-        Session session = getSession();
-        Transaction transaction = session.beginTransaction();
-        session.delete(entity);
-        transaction.commit();
-        session.close();
-    }
+    T query(final String queryString, final Map<String, Object> params);
 
-    public void update(T entity) {
-        Session session = getSession();
-        Transaction transaction = session.beginTransaction();
-        session.update(entity);
-        transaction.commit();
-        session.close();
-    }
+    List<T> queryList(final String queryString);
 
-    protected T query(String queryString) {
-        Session session = getSession();
-        Transaction transaction = session.beginTransaction();
-        T entity = (T)session.createQuery(queryString).getSingleResult();
-        transaction.commit();
-        session.close();
-        return entity;
-    }
-
-    protected List<T> queryList(String queryString) {
-        Session session = getSession();
-        Transaction transaction = session.beginTransaction();
-        List<T> list = (List<T>) session.createQuery(queryString).getResultList();
-        transaction.commit();
-        session.close();
-        return list;
-    }
-
-    protected Integer queryCount(String queryString) {
-        return this.queryList(queryString).size();
-    }
+    List<T> queryList(final String queryString, final Map<String, Object> params);
 }
