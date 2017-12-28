@@ -27,11 +27,15 @@ public class LoginService extends BaseService {
 
     public void processing(RequestAction requestAction) {
         LoginAction loginAction = new LoginAction();
-        loginAction.setUser(requestAction.getData().getString("username"));
-        loginAction.setPassword(requestAction.getData().getString("password"));
+        String username = requestAction.getData().getString("username");
+        String password = requestAction.getData().getString("password");
         requestAction.setBaseAction(loginAction);
 
         UserDao userDao = new UserDao();
+        UserEntity userEntity = userDao.queryUser(loginAction.getUser());
+        if (userEntity.getPassword() == loginAction.getPassword()) {
+
+        }
 
         UUID uuid = UUID.randomUUID();
     }
