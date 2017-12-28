@@ -23,6 +23,6 @@ public class KeepAliveService extends BaseService {
         action.setBufferId(requestAction.getBufferId());
         requestAction.setBaseAction(action);
         requestAction.setServiceCode(ServiceCode.success);
-        log.info(requestAction.getTopid() + ", "+ requestAction.getBufferId() + ", " + requestAction.getData().toJSONString());
+        logger.info(requestAction.getTopid() + ", "+ requestAction.getBufferId() + ", " + requestAction.getData().toJSONString());
     }
 }

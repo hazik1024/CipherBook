@@ -1,0 +1,4 @@
+/* t_user */
+create table t_user (
+    varchar2
+);

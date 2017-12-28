@@ -4,8 +4,8 @@ package start;
 import config.StartupConfig;
 import db.HibernateOperator;
 import network.redis.JedisClient;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import settings.NetworkSetting;
 import org.jdom2.DataConversionException;
 import org.jdom2.Element;
@@ -19,7 +19,7 @@ import java.io.InputStream;
 import java.util.*;
 
 public class ServerStart {
-    private static Log log = LogFactory.getLog(ServerStart.class);
+    private static Logger logger = LogManager.getLogger(ServerStart.class);
     public static void main(String[] args) {
         //加载配置文件
         SAXBuilder builder = new SAXBuilder();
@@ -29,15 +29,15 @@ public class ServerStart {
             doc = builder.build(inputStream);
         }
         catch (IOException e) {
-            log.info("找不到systemconfig.xml文件");
+            logger.info("找不到systemconfig.xml文件");
             e.printStackTrace();
         }
         catch (JDOMException e) {
-            log.info("找不到systemconfig.xml文件");
+            logger.info("找不到systemconfig.xml文件");
             e.printStackTrace();
         }
         if (doc == null) {
-            log.info("找不到systemconfig.xml文件");
+            logger.info("找不到systemconfig.xml文件");
             return;
         }
 

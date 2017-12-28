@@ -4,14 +4,14 @@ import enums.ActionType;
 import enums.ServiceStatus;
 import enums.ServiceType;
 import network.actions.RequestAction;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import settings.ServiceSetting;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
 public abstract class BaseService implements Runnable, Serviceable {
-    protected Log log = LogFactory.getLog(this.getClass());
+    protected Logger logger = LogManager.getLogger(BaseService.class);
 
     private LinkedBlockingQueue<RequestAction> requestQueue = new LinkedBlockingQueue<RequestAction>();
 
@@ -43,7 +43,7 @@ public abstract class BaseService implements Runnable, Serviceable {
     public void run() {
         this.status = ServiceStatus.ready;
         ready();
-        log.info(this.getName() + "运行中...");
+        logger.info(this.getName() + "运行中...");
         this.status = ServiceStatus.running;
         running();
     }
@@ -72,10 +72,10 @@ public abstract class BaseService implements Runnable, Serviceable {
     }
 
     public void start() {
-        Thread thread = new Thread(this, this.getClass().getName() + ".thread");
+        Thread thread = new Thread(this, this.getClass().getSimpleName() + ".thread");
         thread.start();
         this.thread = thread;
-        log.info("[" + this.getClass().getName() + ":" + this.getName() + "]启动...");
+        logger.info("[" + this.getClass().getName() + ":" + this.getName() + "]启动...");
     }
 
     public void stop() {

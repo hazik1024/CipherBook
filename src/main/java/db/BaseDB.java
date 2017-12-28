@@ -1,8 +1,8 @@
 package db;
 
 import entity.DataBaseEntity;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,23 +10,23 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public abstract class BaseDB {
-    private static Log log = LogFactory.getLog(BaseDB.class);
+    private static Logger logger = LogManager.getLogger(BaseDB.class);
     static {
         try {
             Class.forName(getClassName());
         }
         catch (ClassNotFoundException e1) {
-            log.error("加载MySql驱动失败:找不到类");
+            logger.error("加载MySql驱动失败:找不到类");
         }
     }
 
     private DataBaseEntity entity;
 
-    public static String getClassName() {
+    protected static String getClassName() {
         return "com.mysql.jdbc.Driver";
     }
 
-    public BaseDB (DataBaseEntity entity) {
+    protected BaseDB (DataBaseEntity entity) {
         this.entity = entity;
     }
 
@@ -68,7 +68,7 @@ public abstract class BaseDB {
         closeConnection(this.connection);
     }
 
-    public void closeConnection(Connection connection) {
+    protected void closeConnection(Connection connection) {
         if (connection != null) {
             try {
                 connection.close();

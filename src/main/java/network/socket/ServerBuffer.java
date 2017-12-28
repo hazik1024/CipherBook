@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSON;
 import network.actions.RequestAction;
 import network.task.ReadDataTask;
 import network.task.WriteDataTask;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import settings.ServiceSetting;
 
 import java.io.IOException;
@@ -15,7 +15,8 @@ import java.net.Socket;
 import java.net.SocketException;
 
 public class ServerBuffer implements Socketable, ReadDatable, WriteDatable {
-    private Log log = LogFactory.getLog(ServerBuffer.class);
+    private Logger logger = LogManager.getLogger(ServerBuffer.class);
+
     private Socket socket;
     private InputStream inputStream;
     private OutputStream outputStream;
@@ -79,7 +80,7 @@ public class ServerBuffer implements Socketable, ReadDatable, WriteDatable {
     }
 
     public void writed(Integer type) {
-        log.info("bufferId:" + this.getBufferId() + "回复成功:" + type);
+        logger.info("bufferId:" + this.getBufferId() + "回复成功:" + type);
     }
 
     public void addSendAction(RequestAction baseAction) {

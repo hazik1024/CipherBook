@@ -1,24 +1,35 @@
 package entity;
 
+import enums.UserStatus;
+
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "t_user")
-public class UserEntity {
+public class UserEntity implements BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "uid", unique = true, nullable = false)
+    @Column(name = "uid")
     private int uid;
-    @Column(name = "name", nullable = false)
-    private String name;
+    @Column(name = "username", nullable = false)
+    private String username;
     @Column(name = "password", nullable = false)
     private String password;
     @Column(name = "mobile")
     private String mobile;
-    @Column(name = "age")
-    private int age;
+    @Column(name = "truename")
+    private String truename;
     @Column(name = "idcard")
     private String idcard;
+    @Column(name = "registertime")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date registertime;
+    @Column(name = "lastlogintime")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastlogintime;
+    @Column(name = "status")
+    @Enumerated(EnumType.ORDINAL)
+    private UserStatus status;
 
     public int getUid() {
         return uid;
@@ -28,12 +39,12 @@ public class UserEntity {
         this.uid = uid;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -52,12 +63,12 @@ public class UserEntity {
         this.mobile = mobile;
     }
 
-    public int getAge() {
-        return age;
+    public String getTruename() {
+        return truename;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public void setTruename(String truename) {
+        this.truename = truename;
     }
 
     public String getIdcard() {
@@ -66,5 +77,29 @@ public class UserEntity {
 
     public void setIdcard(String idcard) {
         this.idcard = idcard;
+    }
+
+    public Date getLastlogintime() {
+        return lastlogintime;
+    }
+
+    public void setLastlogintime(Date lastlogintime) {
+        this.lastlogintime = lastlogintime;
+    }
+
+    public Date getRegistertime() {
+        return registertime;
+    }
+
+    public void setRegistertime(Date registertime) {
+        this.registertime = registertime;
+    }
+
+    public UserStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(UserStatus status) {
+        this.status = status;
     }
 }

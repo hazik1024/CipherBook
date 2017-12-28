@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import constants.Network;
 import network.task.HeartbeatTask;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import settings.NetworkSetting;
 import util.NetworkUtil;
 
@@ -20,7 +20,7 @@ import java.util.TimerTask;
 
 public class SocketClient {
 
-    private static Log log = LogFactory.getLog(SocketClient.class);
+    private Logger logger = LogManager.getLogger(SocketClient.class);
 
     private Socket socket;
     private String host;
@@ -58,13 +58,13 @@ public class SocketClient {
             new Thread(new Runnable() {
                 private byte[] receiveData = new byte[0];
                 public void run() {
-                    log.info("socketClient开始接收");
+                    logger.info("socketClient开始接收");
                     do {
                         try {
                             byte[] tmpBytes = new byte[Network.bufferLength];
                             int len = socket.getInputStream().read(tmpBytes);
                             if (len < 0) {
-                                log.info("ReadDataTask break...");
+                                logger.info("ReadDataTask break...");
                                 break;
                             }
                             if (len > 0) {
@@ -85,7 +85,7 @@ public class SocketClient {
                                         JSONObject json = JSON.parseObject(response);
                                         JSONObject data = json.getJSONObject("data");
                                         long time = data.getLong("time");
-                                        log.info("耗时[" + (end - time) + "]millseconds[" + this.toString() + "]收到响应:" + response);
+                                        logger.info("耗时[" + (end - time) + "]millseconds[" + this.toString() + "]收到响应:" + response);
 
                                     }
                                     catch (UnsupportedEncodingException e) {

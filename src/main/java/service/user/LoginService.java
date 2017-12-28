@@ -1,10 +1,16 @@
 package service.user;
 
+import dao.user.UserDao;
+import entity.UserEntity;
 import enums.ActionType;
 import enums.ServiceType;
+import enums.UserStatus;
 import network.actions.LoginAction;
 import network.actions.RequestAction;
 import service.base.BaseService;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * 登录服务
@@ -23,5 +29,26 @@ public class LoginService extends BaseService {
         loginAction.setUser(requestAction.getData().getString("username"));
         loginAction.setPassword(requestAction.getData().getString("password"));
         requestAction.setBaseAction(loginAction);
+    }
+
+    @Override
+    public void ready() {
+        super.ready();
+//        UserEntity entity = new UserEntity();
+//        entity.setUsername("hazik");
+//        entity.setPassword("hao86971");
+//        entity.setTruename("hazik");
+//        entity.setMobile("18118781059");
+//        entity.setRegistertime(new Date());
+//        entity.setLastlogintime(new Date());
+//        entity.setStatus(UserStatus.normal);
+        UserDao userDao = new UserDao();
+//        userDao.save(entity);
+        List<UserEntity> list = userDao.getAll();
+        logger.info(list.size());
+        UserEntity entity = userDao.queryById(1);
+        logger.info(entity.getUid() + ", " + entity.getUsername());
+        int count = userDao.getCount();
+        logger.info("count:" + count);
     }
 }

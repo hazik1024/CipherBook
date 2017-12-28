@@ -1,11 +1,9 @@
 package network.task;
 
 import constants.Network;
-import network.socket.ReadDatable;
 import network.socket.ServerBuffer;
-import network.socket.Socketable;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import util.NetworkUtil;
 
 import java.io.IOException;
@@ -14,7 +12,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.SocketException;
 
 public class ReadDataTask implements Runnable {
-    private Log log = LogFactory.getLog(ReadDataTask.class);
+    private Logger loggger = LogManager.getLogger(ReadDataTask.class);
 
     private InputStream inputStream;
     private ServerBuffer serverBuffer;
@@ -27,14 +25,14 @@ public class ReadDataTask implements Runnable {
     }
 
     public void run() {
-        log.info("bufferId:" + this.serverBuffer.getBufferId() + " 读线程启动...");
+        loggger.info("bufferId:" + this.serverBuffer.getBufferId() + " 读线程启动...");
         boolean running = true;
         do {
             try {
                 byte[] bytes = new byte[Network.bufferLength];
                 int len = this.inputStream.read(bytes);
                 if (len < 0) {
-                    log.info("ReadDataTask break...");
+                    loggger.info("ReadDataTask break...");
                     break;
                 }
                 if (len > 0) {

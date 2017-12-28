@@ -2,8 +2,8 @@ package network.task;
 
 import network.actions.RequestAction;
 import network.socket.ServerBuffer;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import util.NetworkUtil;
 
 import java.io.IOException;
@@ -12,7 +12,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class WriteDataTask implements Runnable {
-    private Log log = LogFactory.getLog(WriteDataTask.class);
+    private Logger loggger = LogManager.getLogger(WriteDataTask.class);
 
     private OutputStream outputStream;
     private ServerBuffer serverBuffer;
@@ -42,7 +42,7 @@ public class WriteDataTask implements Runnable {
     }
 
     public void run() {
-        log.info("bufferId:" + this.serverBuffer.getBufferId() + " 写线程启动...");
+        loggger.info("bufferId:" + this.serverBuffer.getBufferId() + " 写线程启动...");
         try {
             while(!Thread.currentThread().isInterrupted()) {
                 RequestAction action = this.writeDatas.take();

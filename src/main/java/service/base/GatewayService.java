@@ -34,7 +34,7 @@ public class GatewayService extends BaseService implements SocketBufferable {
                 InetSocketAddress address = new InetSocketAddress(this.port);
                 this.serverSocket = new ServerSocket();
                 this.serverSocket.bind(address);
-                log.info("ServerSocket启动成功,监听端口:" + this.serverSocket.getLocalPort());
+                logger.info("ServerSocket启动成功,监听端口:" + this.serverSocket.getLocalPort());
             }
             while(this.serverSocket != null && !Thread.interrupted()) {
                 Socket socket = this.serverSocket.accept();
@@ -42,7 +42,7 @@ public class GatewayService extends BaseService implements SocketBufferable {
                 Integer bufferId = serverBufferId.getAndIncrement();
                 ServerBuffer buffer = new ServerBuffer(socket, this, bufferId);
                 ServiceSetting.getInstance().putServerBuffer(buffer);
-                log.info("当前连接ip:" + socket.getInetAddress().getHostAddress() + " , bufferId:" + buffer.getBufferId() + " , 连接总数:" + ServiceSetting.getInstance().getServerBufferCount());
+                logger.info("当前连接ip:" + socket.getInetAddress().getHostAddress() + " , bufferId:" + buffer.getBufferId() + " , 连接总数:" + ServiceSetting.getInstance().getServerBufferCount());
             }
         }
         catch(IOException e) {
