@@ -6,6 +6,9 @@ import enums.convert.UserStatusConvert;
 import javax.persistence.*;
 import java.util.Date;
 
+/**
+ * 用户表
+ */
 @Entity
 @Table(name = "t_user")
 public class UserEntity implements BaseEntity {

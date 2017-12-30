@@ -3,8 +3,8 @@ package service.base;
 import enums.ServiceCode;
 import enums.ServiceType;
 import enums.Topid;
-import network.actions.KeepAliveAction;
-import network.actions.RequestAction;
+import actions.KeepAliveAction;
+import actions.RequestAction;
 
 public class KeepAliveService extends BaseService {
 
@@ -18,8 +18,6 @@ public class KeepAliveService extends BaseService {
 
     public void processing(RequestAction requestAction) {
         KeepAliveAction action = new KeepAliveAction();
-        action.setTime(requestAction.getData().getLong("time"));
-        action.setBufferId(requestAction.getBufferId());
         requestAction.setBaseAction(action);
         requestAction.setServiceCode(ServiceCode.success);
         logger.info(requestAction.getTopid() + ", "+ requestAction.getBufferId() + ", " + requestAction.getData().toJSONString());

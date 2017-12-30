@@ -1,9 +1,3 @@
-import constants.Network;
-import network.socket.SocketClient;
-
-import java.util.HashMap;
-import java.util.Map;
-
 public class TestSocketClient {
 //    private static SocketClient client;
 //    public static void main(String[] args)

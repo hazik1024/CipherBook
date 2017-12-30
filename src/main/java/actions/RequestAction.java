@@ -1,4 +1,4 @@
-package network.actions;
+package actions;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
@@ -9,7 +9,7 @@ public class RequestAction {
     private int bufferId;
     @JSONField(name = "topid")
     private Integer topid;
-    @JSONField(name = "token")
+    @JSONField(name = "token", serialize = false)
     private String token = "";
 
     @JSONField(name = "data")
@@ -26,7 +26,7 @@ public class RequestAction {
     public String pack(){
         JSONObject response = new JSONObject();
         response.put("topid", getTopid());
-        response.put("data", baseAction.pack());
+        response.put("data", baseAction.packData());
         response.put("code", serviceCode.getCode());
         response.put("message", serviceCode.getMessage());
         return response.toJSONString();

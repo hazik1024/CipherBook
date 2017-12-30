@@ -1,4 +1,4 @@
-import db.Mysql;
+import network.db.Mysql;
 
 import java.sql.ResultSet;
 import java.sql.Statement;

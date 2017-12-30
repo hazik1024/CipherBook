@@ -1,4 +1,4 @@
-package db;
+package network.db;
 
 import entity.DataBaseEntity;
 import org.apache.logging.log4j.LogManager;

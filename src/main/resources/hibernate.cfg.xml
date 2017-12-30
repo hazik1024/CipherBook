@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!DOCTYPE hibernate-configuration PUBLIC
         "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
-        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 
 <hibernate-configuration>
     <session-factory>
@@ -11,7 +11,7 @@
         <property name="connection.username">ww</property>
         <property name="connection.password">hao86971</property>
         <!-- 数据库连接池的大小 -->
-        <property name="connection.pool_size">20</property>
+        <!--<property name="connection.pool_size">10</property>-->
         <!-- 每次从数据库中取出并放到JDBC的Statement中的记录条数。Fetch Size设的越大，读数据库的次数越少，速度越快，Fetch Size越小，读数据库的次数越多，速度越慢-->
         <property name="jdbc.fetch_size">100</property>
         <!--批量插入,删除和更新时每次操作的记录数。Batch Size越大，批量操作的向数据库发送Sql的次数越少，速度就越快，同样耗用内存就越大-->
@@ -24,6 +24,13 @@
         <property name="show_sql">true</property>
         <!-- 在启动时根据配置更新数据库 -->
         <property name="hbm2ddl.auto">update</property>
+        <!-- c3p0配置 -->
+        <property name="hibernate.c3p0.max_size">10</property>
+        <property name="hibernate.c3p0.min_size">1</property>
+        <property name="hibernate.c3p0.max_statements">50</property>
+        <property name="hibernate.c3p0.acquire_increment">1</property>
+        <property name="hibernate.c3p0.idle_test_period">60</property>
+        <property name="hibernate.c3p0.timeout">300</property>
 
         <mapping class="entity.UserEntity"/>
     </session-factory>

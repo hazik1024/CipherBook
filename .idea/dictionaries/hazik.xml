@@ -6,6 +6,7 @@
       <w>bufferf</w>
       <w>clientport</w>
       <w>datas</w>
+      <w>dberror</w>
       <w>endoffset</w>
       <w>extdata</w>
       <w>gatewayservice</w>
@@ -13,6 +14,7 @@
       <w>hazik</w>
       <w>idcard</w>
       <w>incrby</w>
+      <w>inno</w>
       <w>jedis</w>
       <w>keepalive</w>
       <w>keysvalues</w>
@@ -23,9 +25,13 @@
       <w>mget</w>
       <w>minidle</w>
       <w>mset</w>
+      <w>mymaster</w>
+      <w>myredis</w>
+      <w>mytest</w>
       <w>passworderror</w>
       <w>registertime</w>
       <w>serverport</w>
+      <w>socketable</w>
       <w>sourcetype</w>
       <w>startoffset</w>
       <w>strlen</w>
@@ -36,10 +42,15 @@
       <w>timebetweenvictionrunsmillis</w>
       <w>topid</w>
       <w>truename</w>
+      <w>usercancel</w>
+      <w>userlogin</w>
+      <w>usermodify</w>
       <w>usernameerror</w>
       <w>usernameexist</w>
+      <w>userregister</w>
       <w>usertoken</w>
       <w>writed</w>
+      <w>yyyy</w>
     </words>
   </dictionary>
 </component>

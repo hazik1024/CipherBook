@@ -1,4 +1,4 @@
-package network.actions;
+package actions;
 
 import com.alibaba.fastjson.annotation.JSONField;
 

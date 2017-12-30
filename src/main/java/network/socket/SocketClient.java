@@ -2,7 +2,7 @@ package network.socket;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import constants.Network;
+import constants.GlobalConfig;
 import network.task.HeartbeatTask;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -61,7 +61,7 @@ public class SocketClient {
                     logger.info("socketClient开始接收");
                     do {
                         try {
-                            byte[] tmpBytes = new byte[Network.bufferLength];
+                            byte[] tmpBytes = new byte[GlobalConfig.bufferLength];
                             int len = socket.getInputStream().read(tmpBytes);
                             if (len < 0) {
                                 logger.info("ReadDataTask break...");
@@ -75,12 +75,12 @@ public class SocketClient {
                                 while (true) {
                                     //处理数据
                                     int totalLen = NetworkUtil.getTotalLength(bytes);
-                                    if (totalLen <= Network.headLength || totalLen > bytes.length) {
+                                    if (totalLen <= GlobalConfig.headLength || totalLen > bytes.length) {
                                         break;
                                     }
                                     try {
                                         byte[] body = NetworkUtil.getBody(bytes, totalLen);
-                                        String response = new String(body, Network.encoding);
+                                        String response = new String(body, GlobalConfig.encoding);
                                         long end = System.currentTimeMillis();
                                         JSONObject json = JSON.parseObject(response);
                                         JSONObject data = json.getJSONObject("data");

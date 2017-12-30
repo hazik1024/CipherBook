@@ -6,8 +6,8 @@ import enums.ServiceCode;
 import enums.ServiceType;
 import enums.Topid;
 import enums.UserStatus;
-import network.actions.RegisterAction;
-import network.actions.RequestAction;
+import actions.RegisterAction;
+import actions.RequestAction;
 import service.base.BaseService;
 
 import java.util.Date;

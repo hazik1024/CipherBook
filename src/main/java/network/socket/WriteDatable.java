@@ -1,6 +1,6 @@
 package network.socket;
 
-import network.actions.RequestAction;
+import actions.RequestAction;
 
 public interface WriteDatable {
     void writed(Integer type);

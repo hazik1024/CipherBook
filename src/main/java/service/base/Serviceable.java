@@ -1,6 +1,6 @@
 package service.base;
 
-import network.actions.RequestAction;
+import actions.RequestAction;
 
 public interface Serviceable {
     void ready();

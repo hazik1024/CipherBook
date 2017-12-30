@@ -3,9 +3,7 @@ package dao.user;
 import dao.GenericDaoImpl;
 import entity.UserEntity;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class UserDao extends GenericDaoImpl<UserEntity> {
 
@@ -26,8 +24,6 @@ public class UserDao extends GenericDaoImpl<UserEntity> {
     }
 
     public UserEntity queryUser(String username) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("username", username);
         return super.query("where username=" + username);
     }
 }

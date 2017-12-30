@@ -3,7 +3,7 @@ package service.base;
 import enums.ServiceStatus;
 import enums.ServiceType;
 import enums.Topid;
-import network.actions.RequestAction;
+import actions.RequestAction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import settings.ServiceSetting;

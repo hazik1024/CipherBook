@@ -1,6 +1,3 @@
-import constants.Network;
-import network.socket.SocketClient;
-
 public class TestSocket {
 //    private static SocketServer server;
 //    private static SocketClient client;

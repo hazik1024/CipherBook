@@ -1,9 +1,9 @@
 package service.base;
 
-import constants.Network;
+import constants.GlobalConfig;
 import enums.ServiceType;
 import enums.Topid;
-import network.actions.RequestAction;
+import actions.RequestAction;
 import network.socket.ServerBuffer;
 import network.socket.SocketBufferable;
 import settings.NetworkSetting;
@@ -38,7 +38,7 @@ public class GatewayService extends BaseService implements SocketBufferable {
             }
             while(this.serverSocket != null && !Thread.interrupted()) {
                 Socket socket = this.serverSocket.accept();
-                socket.setSoTimeout(Network.serverTimeout);
+                socket.setSoTimeout(GlobalConfig.serverTimeout);
                 Integer bufferId = serverBufferId.getAndIncrement();
                 ServerBuffer buffer = new ServerBuffer(socket, this, bufferId);
                 ServiceSetting.getInstance().putServerBuffer(buffer);

@@ -1,7 +1,7 @@
 package settings;
 
-import db.BaseDB;
-import db.Mysql;
+import network.db.BaseDB;
+import network.db.Mysql;
 import entity.DataBaseEntity;
 import enums.DatabaseType;
 

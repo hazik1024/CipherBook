@@ -1,7 +1,7 @@
 package network.socket;
 
 import com.alibaba.fastjson.JSON;
-import network.actions.RequestAction;
+import actions.RequestAction;
 import network.task.ReadDataTask;
 import network.task.WriteDataTask;
 import org.apache.logging.log4j.LogManager;
@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.net.SocketException;
 
 public class ServerBuffer implements Socketable, ReadDatable, WriteDatable {
     private Logger logger = LogManager.getLogger(ServerBuffer.class);
