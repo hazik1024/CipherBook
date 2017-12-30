@@ -1,6 +1,7 @@
 package entity;
 
 import enums.UserStatus;
+import enums.convert.UserStatusConvert;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -28,8 +29,9 @@ public class UserEntity implements BaseEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastlogintime;
     @Column(name = "status")
-    @Enumerated(EnumType.ORDINAL)
+    @Convert(converter = UserStatusConvert.class)
     private UserStatus status;
+
 
     public int getUid() {
         return uid;

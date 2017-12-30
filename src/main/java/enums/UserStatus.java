@@ -1,6 +1,7 @@
 package enums;
 
 public enum UserStatus {
+    none(0, "无"),
     normal(100, "正常"),
     freeze(200, "冻结"),
     cancel(300, "注销")

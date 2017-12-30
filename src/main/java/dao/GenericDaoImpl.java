@@ -7,17 +7,18 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GenericDaoImpl<T> implements GenericDao<T> {
+public abstract class GenericDaoImpl<T> implements GenericDao<T> {
     protected Logger logger = LogManager.getLogger(this.getClass());
 
     private Class<T> clazz;
+    private String fromEntity;
 
     public GenericDaoImpl(final Class<T> clazz) {
         this.clazz = clazz;
+        this.fromEntity = "FROM " + this.clazz.getSimpleName() + " ";
     }
 
     private Session getSession() {
@@ -48,31 +49,50 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
         session.close();
     }
 
-    public T query(final String queryString) {
-        return this.query(queryString, null);
+    public T query(final String condition) {
+        return this.query(condition, null);
     }
 
-    public T query(String queryString, Map<String, Object> params) {
+    public T query(final String condition, final Map<String, Object> params) {
+        T entity = null;
         Session session = getSession();
         Transaction transaction = session.beginTransaction();
-        Query<T> query = session.createQuery(queryString, clazz);
-        if (params != null && params.size() > 0) {
-            for (Map.Entry<String, Object> entry : params.entrySet()) {
-                query.setParameter(entry.getKey(), entry.getValue());
+        try {
+            String queryString = getQueryStringDefault();
+            if (condition != null && condition.length() > 0) {
+                queryString += condition;
             }
+            Query<T> query = session.createQuery(queryString, clazz);
+            if (params != null && params.size() > 0) {
+                for (Map.Entry<String, Object> entry : params.entrySet()) {
+                    query.setParameter(entry.getKey(), entry.getValue());
+                }
+            }
+            entity = query.getSingleResult();
+            return entity;
         }
-        T entity = query.getSingleResult();
-        transaction.commit();
-        session.close();
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            transaction.commit();
+            session.close();
+        }
         return entity;
     }
-
-    public List<T> queryList(final String queryString) {
-        return this.queryList(queryString, null);
+    public List<T> queryList() {
+        return this.queryList(null);
     }
-    public List<T> queryList(final String queryString, final Map<String, Object> params) {
+    public List<T> queryList(final String condition) {
+        return this.queryList(condition, null);
+    }
+    public List<T> queryList(final String condition, final Map<String, Object> params) {
         Session session = getSession();
         Transaction transaction = session.beginTransaction();
+        String queryString = getQueryStringDefault();
+        if (condition != null && condition.length() > 0) {
+            queryString += condition;
+        }
         Query<T> query = session.createQuery(queryString, clazz);
         if (params != null && params.size() > 0) {
             for (Map.Entry<String, Object> entry : params.entrySet()) {
@@ -83,5 +103,9 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
         transaction.commit();
         session.close();
         return list;
+    }
+
+    private String getQueryStringDefault() {
+        return fromEntity;
     }
 }

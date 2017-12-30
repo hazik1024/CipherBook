@@ -1,8 +1,8 @@
 package service.base;
 
-import enums.ActionType;
 import enums.ServiceCode;
 import enums.ServiceType;
+import enums.Topid;
 import network.actions.KeepAliveAction;
 import network.actions.RequestAction;
 
@@ -12,9 +12,8 @@ public class KeepAliveService extends BaseService {
         super(ServiceType.business, "心跳服务");
     }
 
-    @Override
-    public ActionType getActionType() {
-        return ActionType.keepalive;
+    public Topid getTopid() {
+        return Topid.keepalive;
     }
 
     public void processing(RequestAction requestAction) {

@@ -1,23 +1,16 @@
 package network.actions;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 public class LoginAction extends BaseAction {
+    @JSONField(name = "token")
+    private String token = "";
 
-    private String user;
-    private String password;
-
-    public String getUser() {
-        return user;
+    public String getToken() {
+        return token;
     }
 
-    public void setUser(String user) {
-        this.user = user;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void setToken(String token) {
+        this.token = token;
     }
 }

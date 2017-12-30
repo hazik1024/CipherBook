@@ -13,15 +13,4 @@ public abstract class BaseAction {
     public String getExtDataPack() {
         return "";
     }
-
-    @JSONField(name = "sid")
-    private String sid = "";
-
-    public String getSid() {
-        return sid;
-    }
-
-    public void setSid(String sid) {
-        this.sid = sid;
-    }
 }

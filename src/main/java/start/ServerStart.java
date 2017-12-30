@@ -1,7 +1,7 @@
 package start;
 
 
-import config.StartupConfig;
+import constants.GlobalConfig;
 import db.HibernateOperator;
 import network.redis.JedisClient;
 import org.apache.logging.log4j.LogManager;
@@ -25,7 +25,7 @@ public class ServerStart {
         SAXBuilder builder = new SAXBuilder();
         Document doc = null;
         try {
-            InputStream inputStream =  ServerStart.class.getResourceAsStream(StartupConfig.configPath);
+            InputStream inputStream =  ServerStart.class.getResourceAsStream(GlobalConfig.CONFIG_PATH);
             doc = builder.build(inputStream);
         }
         catch (IOException e) {
@@ -112,8 +112,13 @@ public class ServerStart {
                 }
                 RedisSetting.getInstance().setSentinels(list);
             }
-            //初始化Redis
-            JedisClient.getInstance().initClient();
+            try {
+                //初始化Redis
+                JedisClient.getInstance().initClient();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         //启动Service

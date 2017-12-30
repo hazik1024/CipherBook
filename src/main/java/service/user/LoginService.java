@@ -2,15 +2,13 @@ package service.user;
 
 import dao.user.UserDao;
 import entity.UserEntity;
-import enums.ActionType;
+import enums.ServiceCode;
 import enums.ServiceType;
-import enums.UserStatus;
+import enums.Topid;
 import network.actions.LoginAction;
 import network.actions.RequestAction;
 import service.base.BaseService;
 
-import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -21,23 +19,34 @@ public class LoginService extends BaseService {
     public LoginService() {
         super(ServiceType.business, "登录服务");
     }
-    public ActionType getActionType() {
-        return ActionType.login;
+    public Topid getTopid() {
+        return Topid.userlogin;
     }
 
     public void processing(RequestAction requestAction) {
-        LoginAction loginAction = new LoginAction();
         String username = requestAction.getData().getString("username");
         String password = requestAction.getData().getString("password");
-        requestAction.setBaseAction(loginAction);
+
+        LoginAction loginAction = new LoginAction();
 
         UserDao userDao = new UserDao();
-        UserEntity userEntity = userDao.queryUser(loginAction.getUser());
-        if (userEntity.getPassword() == loginAction.getPassword()) {
+        UserEntity userEntity = userDao.queryUser(username);
+        if (userEntity == null) {
+            requestAction.setServiceCode(ServiceCode.usernameerror);
+        }
+        else {
+            if (password.equals(userEntity.getPassword())) {
+                UUID sid = UUID.randomUUID();
+                requestAction.setToken(sid.toString());
 
+                //
+            }
+            else {
+                requestAction.setServiceCode(ServiceCode.passworderror);
+            }
         }
 
-        UUID uuid = UUID.randomUUID();
+        requestAction.setBaseAction(loginAction);
     }
 
     @Override
@@ -51,13 +60,13 @@ public class LoginService extends BaseService {
 //        entity.setRegistertime(new Date());
 //        entity.setLastlogintime(new Date());
 //        entity.setStatus(UserStatus.normal);
+
         UserDao userDao = new UserDao();
-//        userDao.save(entity);
-        List<UserEntity> list = userDao.getAll();
-        logger.info(list.size());
         UserEntity entity = userDao.queryById(1);
-        logger.info(entity.getUid() + ", " + entity.getUsername());
-        int count = userDao.getCount();
-        logger.info("count:" + count);
+        if (entity != null) {
+            logger.info(entity.getUid() + ", " + entity.getUsername());
+            int count = userDao.getCount();
+            logger.info("count:" + count);
+        }
     }
 }

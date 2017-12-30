@@ -9,8 +9,8 @@ public class RequestAction {
     private int bufferId;
     @JSONField(name = "topid")
     private Integer topid;
-    @JSONField(name = "sid", serialize = false)
-    private String sid;
+    @JSONField(name = "token")
+    private String token = "";
 
     @JSONField(name = "data")
     private JSONObject data;
@@ -47,14 +47,6 @@ public class RequestAction {
 
     public void setTopid(Integer topid) {
         this.topid = topid;
-    }
-
-    public String getSid() {
-        return sid;
-    }
-
-    public void setSid(String sid) {
-        this.sid = sid;
     }
 
     public JSONObject getData() {
@@ -95,5 +87,13 @@ public class RequestAction {
 
     public void setServiceCode(ServiceCode serviceCode) {
         this.serviceCode = serviceCode;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

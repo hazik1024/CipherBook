@@ -1,0 +1,13 @@
+/* t_user */
+CREATE TABLE `t_user` (
+  `uid` int(10) NOT NULL AUTO_INCREMENT,
+  `username` varchar(20) NOT NULL,
+  `password` varchar(60) NOT NULL,
+  `mobile` varchar(11) NOT NULL,
+  `truename` varchar(60) DEFAULT NULL,
+  `idcard` varchar(18) DEFAULT NULL,
+  `registertime` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `lastlogintime` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `status` int(10) DEFAULT '100',
+  PRIMARY KEY (`uid`)
+) ENGINE=InnoDB AUTO_INCREMENT=0;

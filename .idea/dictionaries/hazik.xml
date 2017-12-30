@@ -6,15 +6,39 @@
       <w>bufferf</w>
       <w>clientport</w>
       <w>datas</w>
+      <w>endoffset</w>
       <w>extdata</w>
       <w>gatewayservice</w>
+      <w>getrange</w>
+      <w>hazik</w>
       <w>idcard</w>
+      <w>incrby</w>
+      <w>jedis</w>
       <w>keepalive</w>
+      <w>keysvalues</w>
+      <w>lastlogintime</w>
+      <w>mastername</w>
+      <w>maxidle</w>
+      <w>maxtotal</w>
+      <w>mget</w>
+      <w>minidle</w>
+      <w>mset</w>
+      <w>passworderror</w>
+      <w>registertime</w>
       <w>serverport</w>
       <w>sourcetype</w>
+      <w>startoffset</w>
+      <w>strlen</w>
       <w>systemconfig</w>
       <w>termtype</w>
+      <w>testonborrow</w>
+      <w>testonreturn</w>
+      <w>timebetweenvictionrunsmillis</w>
       <w>topid</w>
+      <w>truename</w>
+      <w>usernameerror</w>
+      <w>usernameexist</w>
+      <w>usertoken</w>
       <w>writed</w>
     </words>
   </dictionary>

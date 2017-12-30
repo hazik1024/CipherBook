@@ -1,8 +1,8 @@
 package service.base;
 
-import enums.ActionType;
 import enums.ServiceStatus;
 import enums.ServiceType;
+import enums.Topid;
 import network.actions.RequestAction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,7 +27,7 @@ public abstract class BaseService implements Runnable, Serviceable {
         this.status = ServiceStatus.stop;
     }
 
-    public abstract ActionType getActionType();
+    public abstract Topid getTopid();
 
     public void addRequestAction(RequestAction requestAction) {
         try {

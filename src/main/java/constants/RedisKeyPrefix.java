@@ -1,6 +1,8 @@
 package constants;
 
 public class RedisKeyPrefix {
-    public static final String USER_INFO = "userinfo";
-    public static final String USER_INFO_PATTERN = "userinfopattern";
+    //用户
+    public static final String USER_ENTITY = "userentity:";
+    public static final String USER_ENTITY_PATTERN = "userentitypattern:";
+    public static final String USER_TOKEN = "usertoken:";
 }

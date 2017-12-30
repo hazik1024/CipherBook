@@ -1,10 +1,13 @@
 package enums;
 
-public enum ActionType {
+public enum Topid {
     gateway(0, "gatewayservice"),
     keepalive(100000, "心跳"),
-    login(100101, "登录"),
-    register(100102, "注册")
+    //用户
+    userlogin(100101, "登录"),
+    userregister(100102, "注册"),
+    usercancel(100103, "注销"),
+    usermodifyPassword(100104, "修改登录密码")
     ;
 
 
@@ -19,7 +22,7 @@ public enum ActionType {
         return name;
     }
 
-    ActionType(int code, String name) {
+    Topid(int code, String name) {
         this.code = code;
         this.name = name;
     }

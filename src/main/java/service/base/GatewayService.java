@@ -1,8 +1,8 @@
 package service.base;
 
 import constants.Network;
-import enums.ActionType;
 import enums.ServiceType;
+import enums.Topid;
 import network.actions.RequestAction;
 import network.socket.ServerBuffer;
 import network.socket.SocketBufferable;
@@ -21,8 +21,8 @@ public class GatewayService extends BaseService implements SocketBufferable {
         super(ServiceType.gateway, "前置服务");
     }
 
-    public ActionType getActionType() {
-        return ActionType.gateway;
+    public Topid getTopid() {
+        return Topid.gateway;
     }
 
     private int port = NetworkSetting.getInstance().getServerPort();

@@ -10,11 +10,13 @@ public interface GenericDao<T> {
 
     void update(T entity);
 
-    T query(final String queryString);
+    T query(final String condition);
 
-    T query(final String queryString, final Map<String, Object> params);
+    T query(final String condition, final Map<String, Object> params);
 
-    List<T> queryList(final String queryString);
+    List<T> queryList();
 
-    List<T> queryList(final String queryString, final Map<String, Object> params);
+    List<T> queryList(final String condition);
+
+    List<T> queryList(final String condition, final Map<String, Object> params);
 }

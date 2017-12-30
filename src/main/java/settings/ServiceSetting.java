@@ -28,24 +28,18 @@ public class ServiceSetting {
         return this.services.get(actionCode);
     }
 
-    public void putService(BaseService service) {
-        this.services.put(service.getActionType().getCode(), service);
+    private void putService(BaseService service) {
+        this.services.put(service.getTopid().getCode(), service);
     }
-    public void removeService(Integer actionCode) {
+    private void removeService(Integer actionCode) {
         stopService(actionCode);
         this.services.remove(actionCode);
     }
     public void removeService(BaseService service) {
-        removeService(service.getActionType().getCode());
-    }
-    public void removeAllService() {
-        for (BaseService baseService : this.services.values()) {
-            baseService.stop();
-        }
-        this.services.clear();
+        removeService(service.getTopid().getCode());
     }
 
-    public void stopService(Integer actionCode) {
+    private void stopService(Integer actionCode) {
         BaseService baseService = this.getService(actionCode);
         baseService.stop();
     }
