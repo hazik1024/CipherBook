@@ -30,11 +30,21 @@
       <w>mytest</w>
       <w>passworderror</w>
       <w>registertime</w>
+      <w>sadd</w>
+      <w>scard</w>
+      <w>sdiff</w>
       <w>serverport</w>
+      <w>sinter</w>
+      <w>sismember</w>
+      <w>smembers</w>
       <w>socketable</w>
       <w>sourcetype</w>
+      <w>spop</w>
+      <w>srandmember</w>
+      <w>srem</w>
       <w>startoffset</w>
       <w>strlen</w>
+      <w>sunion</w>
       <w>systemconfig</w>
       <w>termtype</w>
       <w>testonborrow</w>
@@ -44,6 +54,7 @@
       <w>truename</w>
       <w>usercancel</w>
       <w>userlogin</w>
+      <w>userlogintoken</w>
       <w>usermodify</w>
       <w>usernameerror</w>
       <w>usernameexist</w>
@@ -51,6 +62,12 @@
       <w>usertoken</w>
       <w>writed</w>
       <w>yyyy</w>
+      <w>zadd</w>
+      <w>zcard</w>
+      <w>zincrby</w>
+      <w>zrange</w>
+      <w>zrem</w>
+      <w>zrevrange</w>
     </words>
   </dictionary>
 </component>

@@ -61,12 +61,12 @@ public class LoginService extends BaseService {
 //        entity.setLastlogintime(new Date());
 //        entity.setStatus(UserStatus.normal);
 
-        UserDao userDao = new UserDao();
-        UserEntity entity = userDao.queryById(1);
-        if (entity != null) {
-            logger.info(entity.getUid() + ", " + entity.getUsername());
-            int count = userDao.getCount();
-            logger.info("count:" + count);
-        }
+//        UserDao userDao = new UserDao();
+//        UserEntity entity = userDao.queryById(1);
+//        if (entity != null) {
+//            logger.info(entity.getUid() + ", " + entity.getUsername());
+//            int count = userDao.getCount();
+//            logger.info("count:" + count);
+//        }
     }
 }

@@ -14,6 +14,10 @@ public abstract class CacheDaoImpl<T> implements CacheDao<T> {
 
     }
 
+    public void save(String key, String subKey, String value, int expire) {
+
+    }
+
     public void save(String key, T value) {
 
     }

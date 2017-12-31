@@ -3,8 +3,11 @@ package util;
 import network.redis.JedisClient;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.SortingParams;
+import redis.clients.jedis.params.sortedset.ZAddParams;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class JedisUtil {
 //////////////////////////////////////////////////////////////////////////
@@ -206,6 +209,11 @@ public class JedisUtil {
         }
         return type;
     }
+
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
     /*String*/
 //////////////////////////////////////////////////////////////////////////
@@ -493,7 +501,381 @@ public class JedisUtil {
     }
 
 //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
     /*Set*/
 //////////////////////////////////////////////////////////////////////////
 
+    /**
+     * 向Set中插入多个member
+     * @param key key
+     * @param members members
+     * @return 可能是成功的个数,未验证
+     */
+    public static long sadd(String key, String... members) {
+        long count = 0L;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            count = jedis.sadd(key, members);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
+
+    /**
+     * 获取Set中元数个数
+     * @param key key
+     * @return 个数
+     */
+    public static long scard(String key) {
+        long count = 0L;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            count = jedis.scard(key);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
+
+    /**
+     * 获取元素结合
+     * @param key key
+     * @return set
+     */
+    public static Set<String> smembers(String key) {
+        Set<String> sets = null;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            sets = jedis.smembers(key);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return sets;
+    }
+
+    /**
+     * 从Set中移除成员
+     * @param key key
+     * @param members members
+     * @return 可能是成功的个数,未验证
+     */
+    public static long srem(String key, String... members) {
+        long count = 0L;
+        if (members == null) {
+            return count;
+        }
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            count = jedis.srem(key, members);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
+
+    /**
+     * 从Set中随机移除一个值
+     * @param key key
+     * @return 移除的值
+     */
+    public static String spop(String key) {
+        String value = null;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            value = jedis.spop(key);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return value;
+    }
+
+    /**
+     * 从Set中随机移除count个值
+     * @param key key
+     * @param count count
+     * @return 移除的值的集合
+     */
+    public static Set<String> spop(String key, long count) {
+        Set<String> sets = null;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            sets = jedis.spop(key, count);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return sets;
+    }
+
+    /**
+     * 检测元素是否为成员
+     * @param key key
+     * @param member member
+     * @return 是否为成员
+     */
+    public static boolean sismember(String key, String member) {
+        boolean result = false;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            result = jedis.sismember(key, member);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
+     * 多个key对应集合的交集
+     * @param keys keys
+     * @return 集合
+     */
+    public static Set<String> sinter(String... keys) {
+        Set<String> sets = null;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            sets = jedis.sinter(keys);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return sets;
+    }
+
+    /**
+     * 多个key对应集合的并集
+     * @param keys keys
+     * @return 集合
+     */
+    public static Set<String> sunion(String... keys) {
+        Set<String> sets = null;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            sets = jedis.sunion(keys);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return sets;
+    }
+
+    /**
+     * 多个key对应集合的差集
+     * @param keys keys
+     * @return 集合
+     */
+    public static Set<String> sdiff(String... keys) {
+        Set<String> sets = null;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            sets = jedis.sdiff(keys);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return sets;
+    }
+
+    /**
+     * 从Set中随机返回一个值
+     * @param key key
+     * @return 值
+     */
+    public static String srandmember(String key) {
+        String result = null;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            result = jedis.srandmember(key);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
+     * 从Set中随机返回count个值
+     * @param key key
+     * @return 值的列表
+     */
+    public static List<String> srandmember(String key, int count) {
+        List<String> list = null;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            list = jedis.srandmember(key, count);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+    /*SortedSet*/
+//////////////////////////////////////////////////////////////////////////
+
+    /**
+     * 添加一个member及其score值
+     * @param key key
+     * @param score score
+     * @param member member
+     * @return 状态码
+     */
+    public static Long zadd(String key, double score, String member) {
+        long status = 0L;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            status = jedis.zadd(key, score, member);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return status;
+    }
+    /**
+     * 添加一个member及其score值
+     * @param key key
+     * @param score score
+     * @param member member
+     * @param params xx:只更新已存在的元素,不添加新元素;nx:不更新已有元素,只添加新元素;ch:更新已存在的元素且添加新元素
+     * @return 状态码
+     */
+    public static Long zadd(String key, double score, String member, ZAddParams params) {
+        long status = 0L;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            status = jedis.zadd(key, score, member, params);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return status;
+    }
+    /**
+     * 添加多个member及其score值
+     * @param key key
+     * @param scoreMembers member及其score集合
+     * @return 状态码
+     */
+    public static Long zadd(String key, Map<String, Double> scoreMembers) {
+        long status = 0L;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            status = jedis.zadd(key, scoreMembers);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return status;
+    }
+
+    /**
+     * 集合中元素个数
+     * @param key key
+     * @return 个数
+     */
+    public static long zcard(String key) {
+        long count = 0L;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            count = jedis.zcard(key);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
+
+    /**
+     * 返回指定区间内的成员
+     * 按score值递增(从小到大)排序,相同score值的成员按字典序来排列
+     * 需要成员按 score 值递减(从大到小)来排列,使用zrevrange
+     * 下标参数 start 和 stop 都以 0 为底，也就是说，以 0 表示有序集第一个成员，以 1 表示有序集第二个成员，以此类推。
+     * 也可以使用负数下标，以 -1 表示最后一个成员， -2 表示倒数第二个成员，以此类推。
+     * @param key key
+     * @param start start
+     * @param end end
+     * @return 集合
+     */
+    public static Set<String> zrange(String key, long start, long end) {
+        Set<String> sets = null;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            sets = jedis.zrange(key, start, end);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return sets;
+    }
+
+    /**
+     * 从SortedSet中移除members
+     * @param key key
+     * @param members members
+     * @return 状态码
+     */
+    public Long zrem(String key, String... members) {
+        Long count = 0L;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            count = jedis.zrem(key, members);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
+
+    /**
+     * member对应的score值加上score
+     * 当member不存在时,相当于zadd
+     * @param key key
+     * @param score 增加的score
+     * @param member member
+     * @return 增加后的member的score值
+     */
+    public Double zincrby(String key, double score, String member) {
+        Double value = 0.0;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            value = jedis.zincrby(key, score, member);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return value;
+    }
 }

@@ -1,7 +1,7 @@
 package cache;
 
 import constants.GlobalConfig;
-import constants.RedisKeyPrefix;
+import constants.RedisKey;
 import entity.UserEntity;
 
 public class UserCacheDao extends CacheDaoImpl<UserEntity> {
@@ -15,8 +15,9 @@ public class UserCacheDao extends CacheDaoImpl<UserEntity> {
     }
 
     public void saveToken(int uid, String token) {
-        String key = RedisKeyPrefix.USER_TOKEN + uid;
+        String key = RedisKey.USER_LOGIN_TOKEN;
+        String uidKey = RedisKey.USER_ID_PREFIX + uid;
         int expire = GlobalConfig.TOKEN_EXPIRE;
-        super.save(key, token, expire);
+        super.save(key, uidKey, token, expire);
     }
 }
