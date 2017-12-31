@@ -840,6 +840,30 @@ public class JedisUtil {
     }
 
     /**
+     * 返回指定区间内的成员
+     * 按score值递减(从大到小)排序,相同score值的成员按字典序来排列
+     * 需要成员按 score 值递增(从小到大)来排列,使用zrange
+     * 下标参数 start 和 stop 都以 0 为底，也就是说，以 0 表示有序集第一个成员，以 1 表示有序集第二个成员，以此类推。
+     * 也可以使用负数下标，以 -1 表示最后一个成员， -2 表示倒数第二个成员，以此类推。
+     * @param key key
+     * @param start start
+     * @param end end
+     * @return 集合
+     */
+    public static Set<String> zrevrange(String key, long start, long end) {
+        Set<String> sets = null;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            sets = jedis.zrevrange(key, start, end);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return sets;
+    }
+
+    /**
      * 从SortedSet中移除members
      * @param key key
      * @param members members
@@ -866,11 +890,233 @@ public class JedisUtil {
      * @param member member
      * @return 增加后的member的score值
      */
-    public Double zincrby(String key, double score, String member) {
+    public static Double zincrby(String key, double score, String member) {
         Double value = 0.0;
         try {
             Jedis jedis = JedisClient.getInstance().getJedis();
             value = jedis.zincrby(key, score, member);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return value;
+    }
+
+    /**
+     * 返回member的排名，按 score 值递增(从小到大)顺序排列
+     * @param key key
+     * @param member member
+     * @return 排名
+     */
+    public static Long zrank(String key, String member) {
+        long value = 0L;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            value = jedis.zrank(key, member);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return value;
+    }
+
+    /**
+     * 返回member的排名，按 score 值递减(从大到小)顺序排列
+     * @param key key
+     * @param member member
+     * @return 排名
+     */
+    public static Long zrevrank(String key, String member) {
+        long value = 0L;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            value = jedis.zrevrank(key, member);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return value;
+    }
+    /**
+     * 获取member对应的score值
+     * 当member不存在时,相当于zadd
+     * @param key key
+     * @param member member
+     * @return score值
+     */
+    public static Double zscore(String key, String member) {
+        Double value = 0.0;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            value = jedis.zscore(key, member);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return value;
+    }
+
+    /**
+     * 统计score在min和max中的成员数量(min<=score<=max)
+     * @param key key
+     * @param min 最小值
+     * @param max 最大值
+     * @return 数量
+     */
+    public static long zcount(String key, double min, double max) {
+        long count = 0L;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            count = jedis.zcount(key, min, max);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
+
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+    /*List*/
+//////////////////////////////////////////////////////////////////////////
+
+    /**
+     * 计算list的元素个数
+     * @param key key
+     * @return 数量
+     */
+    public static long llen(String key) {
+        long number = 0L;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            number = jedis.llen(key);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return number;
+    }
+    /**
+     * 设置列表中下标index的元素值value
+     * @param key key
+     * @param index index
+     * @param value value
+     * @return 成功返回OK；如果key不存在，返回一个错误
+     */
+    public static String lset(String key, int index, String value) {
+        String result = null;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            result = jedis.lset(key, index, value);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
+     * 从List中移除count个value
+     * count>0从表头向表尾搜索，移除value相同的元素，数量为count
+     * count<0从表尾向表头搜索，移除value相同的元素，数量为count的绝对值
+     * count=0移除所有value相同的元素
+     * @param key key
+     * @param count count
+     * @param value value
+     * @return 移除的数量
+     */
+    public static long lrem(String key, long count, String value) {
+        long number = 0L;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            number = jedis.lrem(key, count, value);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return number;
+    }
+
+    /**
+     * 将values插入表头
+     * 后插入的在前面，如果values=a,b,c则插入后为c,b,a,...
+     * @param key key
+     * @param values 1个或多个value
+     * @return 列表的总长度
+     */
+    public static long lpush(String key, String... values) {
+        long length = 0L;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            length = jedis.lpush(key, values);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return length;
+    }
+
+
+
+    /**
+     * 将values插入表尾
+     * @param key key
+     * @param values 1个或多个value
+     * @return 列表的总长度
+     */
+    public static long rpush(String key, String... values) {
+        long length = 0L;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            length = jedis.rpush(key, values);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return length;
+    }
+
+    /**
+     * 移除并返回头元素
+     * @param key key
+     * @return 移除的元素
+     */
+    public static String lpop(String key) {
+        String value = null;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            value = jedis.lpop(key);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return value;
+    }
+
+    /**
+     * 移除并返回尾元素
+     * @param key key
+     * @return 移除的元素
+     */
+    public static String rpop(String key) {
+        String value = null;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            value = jedis.rpop(key);
             jedis.close();
         }
         catch (Exception e) {
