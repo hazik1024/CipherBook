@@ -1,37 +1,63 @@
 package cache;
 
+import util.JedisUtil;
+
 import java.util.List;
+import java.util.Map;
 
 public abstract class CacheDaoImpl<T> implements CacheDao<T> {
-    public abstract T getEntity();
-    public abstract void setEntity(T entity);
+    private static final String OK = "OK";
+    public abstract T mapToEntity(Map<String, String> map);
+    public abstract Map<String, String> entityToMap(T entity);
 
-    public void save(String key, String value) {
+    public boolean save(String key, String value) {
+        String result = JedisUtil.set(key, value);
+        return OK.equals(result);
+    }
+
+    public boolean save(String key, String value, long expire) {
+        String result = JedisUtil.set(key, value, expire);
+        return OK.equals(result);
+    }
+
+    public boolean save(String key, T entity) {
+        Map<String, String> map = entityToMap(entity);
+        String result = JedisUtil.hmset(key, map);
+        return OK.equals(result);
+    }
+
+    public boolean delete(String key) {
+        long count = JedisUtil.del(key);
+        return count == 1;
+    }
+
+    public long delete(String... keys) {
+        return JedisUtil.del(keys);
 
     }
 
-    public void save(String key, String value, int expire) {
-
+    public boolean update(String key, String value) {
+        return this.save(key, value);
     }
 
-    public void save(String key, String subKey, String value, int expire) {
-
+    public boolean update(String key, T entity) {
+        return this.save(key, entity);
     }
 
-    public void save(String key, T value) {
-
+    public boolean update(String key, String value, long expire) {
+        return this.save(key, value, expire);
     }
 
-    public void delete(String key) {
-
+    public String get(String key) {
+        return JedisUtil.get(key);
     }
 
-    public void update(String key, Object value) {
-
-    }
-
-    public T get(String key) {
-        return null;
+    public T getEntity(String key) {
+        Map<String, String> map =  JedisUtil.hgetAll(key);
+        if (map == null || map.size() < 1) {
+            return null;
+        }
+        return mapToEntity(map);
     }
 
     public List<T> getList(String key) {

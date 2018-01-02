@@ -1,5 +1,6 @@
 package network.redis;
 
+import org.jetbrains.annotations.Contract;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.JedisSentinelPool;
@@ -7,6 +8,7 @@ import settings.RedisSetting;
 
 public class JedisClient {
     private static JedisClient instance = new JedisClient();
+    @Contract(pure = true)
     public static JedisClient getInstance() {
         return instance;
     }

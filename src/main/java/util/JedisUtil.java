@@ -2,6 +2,7 @@ package util;
 
 import network.redis.JedisClient;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.Pipeline;
 import redis.clients.jedis.SortingParams;
 import redis.clients.jedis.params.sortedset.ZAddParams;
 
@@ -16,7 +17,7 @@ public class JedisUtil {
     /**
      * 查询key的过期时间
      * @param key key
-     * @return 设置的过期时间
+     * @return 剩余的过期时间(key不存在-2, key存在但没设置过期时间-1, 返回剩余过期时间)
      */
     public static long ttl(String key) {
         long expireSeconds = 0L;
@@ -34,7 +35,7 @@ public class JedisUtil {
      * 设置过期时间
      * @param key key
      * @param expireSeconds 过期时间
-     * @return 影响的条目数
+     * @return (1成功 0失败)
      */
     public static long expire(String key, int expireSeconds) {
         if (expireSeconds <= 0) {
@@ -54,7 +55,7 @@ public class JedisUtil {
     /**
      * 取消过期时间设置
      * @param key key
-     * @return 影响的条目数
+     * @return (1成功 0失败)
      */
     public static long persist(String key) {
         long count = 0L;
@@ -70,14 +71,31 @@ public class JedisUtil {
     }
 
     /**
-     * 清空所有的key
-     * @return 不知道是啥
+     * 清空所有数据库的所有key
+     * @return 总是返回OK
      */
     public static String flushAll() {
         String result = null;
         try {
             Jedis jedis = JedisClient.getInstance().getJedis();
             result = jedis.flushAll();
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
+     * 清空当前数据库的所有key
+     * @return 总是返回OK
+     */
+    public static String flushDB() {
+        String result = null;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            result = jedis.flushDB();
             jedis.close();
         }
         catch (Exception e) {
@@ -126,7 +144,7 @@ public class JedisUtil {
      * 重命名key
      * @param oldKey 旧key
      * @param newKey 新key
-     * @return 状态码
+     * @return (OK成功, 失败时候返回一个错误)
      */
     public static String rename(String oldKey, String newKey) {
         String status = null;
@@ -145,7 +163,7 @@ public class JedisUtil {
      * 重命名key,不存在newKey才会执行
      * @param oldKey 旧key
      * @param newKey 新key
-     * @return 状态码
+     * @return (OK成功, 失败时候返回一个错误)
      */
     public static long renamenx(String oldKey, String newKey) {
         long status = 0L;
@@ -197,6 +215,11 @@ public class JedisUtil {
         return list;
     }
 
+    /**
+     * 返回值的类型
+     * @param key key
+     * @return (none不存在key, string字符串, list列表, set集合, zset有序集, hash哈希表)
+     */
     public static String type(String key) {
         String type = null;
         try {
@@ -237,7 +260,8 @@ public class JedisUtil {
     }
 
     /**
-     * 设置key-value,会覆盖原来的value
+     * 保存value
+     * 无论key是否存在
      * @param key key
      * @param value value
      * @return 状态码
@@ -256,16 +280,77 @@ public class JedisUtil {
     }
 
     /**
-     * 设置key-value,仅key不存在时才成功
+     * 保存value和过期时间
+     * 无论key是否存在
      * @param key key
      * @param value value
-     * @return 状态码(1成功,key不存在 0不成功,key存在)
+     * @param time time
+     * @return (OK成功, 失败返回)
+     */
+    public static String set(String key, String value, long time) {
+        String result = null;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            result = jedis.set(key, value, "", "EX", time);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
+     * key不存在时保存value
+     * @param key key
+     * @param value value
+     * @return 状态码(1成功 0失败)
      */
     public static long setnx(String key, String value) {
         long result = 0L;
         try {
             Jedis jedis = JedisClient.getInstance().getJedis();
             result = jedis.setnx(key, value);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
+     * key不存在时保存value和过期时间
+     * @param key key
+     * @param value value
+     * @param time time
+     * @return 状态值(OK成功, 失败返回错误)
+     */
+    public static String setnx(String key, String value, long time) {
+        String result = null;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            result = jedis.set(key, value, "NX", "EX", time);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
+     * 设置key-value-expire
+     * @param key key
+     * @param value value
+     * @param time 过期时间(秒)
+     * @return 状态码
+     */
+    public static String setex(String key, String value, long time) {
+        String result = null;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            result = jedis.set(key, value, "XX", "EX", time);
             jedis.close();
         }
         catch (Exception e) {
@@ -332,26 +417,6 @@ public class JedisUtil {
             e.printStackTrace();
         }
         return length;
-    }
-
-    /**
-     * 设置key-value-expire
-     * @param key key
-     * @param value value
-     * @param seconds 过期时间(秒)
-     * @return 状态码
-     */
-    public static String setex(String key, String value, int seconds) {
-        String result = null;
-        try {
-            Jedis jedis = JedisClient.getInstance().getJedis();
-            result = jedis.setex(key, seconds, value);
-            jedis.close();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        return result;
     }
 
     /**
@@ -1123,5 +1188,279 @@ public class JedisUtil {
             e.printStackTrace();
         }
         return value;
+    }
+
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+    /*Hash*/
+//////////////////////////////////////////////////////////////////////////
+
+    /**
+     * 添加数据到hash表
+     * @param key key
+     * @param field field
+     * @param value value
+     * @return (0覆盖旧值成功 1保存新值成功)
+     */
+    public static Long hset(String key, String field, String value) {
+        Long result = null;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            result = jedis.hset(key, field, value);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
+     * 添加数据到hash表，当field不存在才会保存
+     * @param key key
+     * @param field field
+     * @param value value
+     * @return (1保存成功 0给定域已经存在且没有操作被执行)
+     */
+    public static Long hsetnx(String key, String field, String value) {
+        Long result = null;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            result = jedis.hsetnx(key, field, value);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
+     * 删除一个或多个field
+     * @param key key
+     * @param fields fields
+     * @return 成功移除的数量
+     */
+    public static Long hdel(String key, String... fields) {
+        Long result = null;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            result = jedis.hdel(key, fields);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
+     * 从hash表获取值
+     * @param key key
+     * @param field field
+     * @return
+     */
+    public static String hget(String key, String field) {
+        String value = null;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            value = jedis.hget(key, field);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return value;
+    }
+
+    /**
+     * 获取所有的数据
+     * @param key key
+     * @return 数据
+     */
+    public static Map<String, String> hgetAll(String key) {
+        Map<String, String> value = null;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            value = jedis.hgetAll(key);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return value;
+    }
+
+    /**
+     * 检测field是否存在
+     * @param key key
+     * @param field field
+     * @return (1存在 0不存在field或key)
+     */
+    public static boolean hexists(String key, String field) {
+        boolean result = false;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            result = jedis.hexists(key, field);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
+     * 获取所有的field
+     * @param key key
+     * @return field集合
+     */
+    public static Set<String> hkeys(String key) {
+        Set<String> value = null;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            value = jedis.hkeys(key);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return value;
+    }
+
+    /**
+     * 获取所有的field的值
+     * @param key key
+     * @return field集合
+     */
+    public static List<String> hvals(String key) {
+        List<String> value = null;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            value = jedis.hvals(key);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return value;
+    }
+
+    /**
+     * 获取field的数量
+     * @param key key
+     * @return 数量
+     */
+    public static Long hlen(String key) {
+        long number = 0L;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            number = jedis.hlen(key);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return number;
+    }
+    /**
+     * 添加数据到hash表
+     * 会覆盖已有的field
+     * @param key key
+     * @param fieldsAndValues 键值对
+     * @return (OK成功,失败返回一个错误)
+     */
+    public static String hmset(String key, Map<String, String> fieldsAndValues) {
+        String result = null;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            result = jedis.hmset(key, fieldsAndValues);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
+     * 从hash表获取值
+     * @param key key
+     * @param fields field
+     * @return 值的列表，按照field的顺序返回
+     */
+    public static List<String> hmget(String key, String... fields) {
+        List<String> value = null;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            value = jedis.hmget(key, fields);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return value;
+    }
+
+    /**
+     * 获取field的值的长度
+     * @param key key
+     * @param field field
+     * @return 值的长度
+     */
+    public static Long hstrlen(String key, String field) {
+        long number = 0L;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+//            number = jedis.hstrlen(key, field);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return number;
+    }
+
+    /**
+     * field 的值加上增量value
+     * @param key key
+     * @param field field
+     * @param value value
+     * @return hincrby后field的值
+     */
+    public static long hincrby(String key, String field, long value) {
+        long number = 0L;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            number = jedis.hincrBy(key, field, value);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return number;
+    }
+
+    /**
+     * field 的值加上增量value
+     * @param key key
+     * @param field field
+     * @param value value
+     * @return hincrby后field的值
+     */
+    public static double hincrByFloat(String key, String field, double value) {
+        double number = 0L;
+        try {
+            Jedis jedis = JedisClient.getInstance().getJedis();
+            number = jedis.hincrByFloat(key, field, value);
+            jedis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return number;
     }
 }

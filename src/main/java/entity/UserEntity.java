@@ -35,6 +35,8 @@ public class UserEntity implements BaseEntity {
     @Convert(converter = UserStatusConvert.class)
     private UserStatus status;
 
+    private String token;
+
 
     public int getUid() {
         return uid;

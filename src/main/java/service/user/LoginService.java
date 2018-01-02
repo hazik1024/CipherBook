@@ -1,5 +1,6 @@
 package service.user;
 
+import cache.UserCacheDao;
 import dao.user.UserDao;
 import entity.UserEntity;
 import enums.ServiceCode;
@@ -39,7 +40,8 @@ public class LoginService extends BaseService {
                 UUID sid = UUID.randomUUID();
                 requestAction.setToken(sid.toString());
 
-                //
+                //存储到redis
+
             }
             else {
                 requestAction.setServiceCode(ServiceCode.passworderror);
@@ -68,5 +70,13 @@ public class LoginService extends BaseService {
 //            int count = userDao.getCount();
 //            logger.info("count:" + count);
 //        }
+
+        UserCacheDao userCacheDao = new UserCacheDao();
+        if (userCacheDao.saveToken(1,UUID.randomUUID().toString())) {
+            logger.info("保存成功");
+        }
+        else {
+            logger.info("保存失败");
+        }
     }
 }

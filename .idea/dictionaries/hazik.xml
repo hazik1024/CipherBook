@@ -28,12 +28,15 @@
       <w>mymaster</w>
       <w>myredis</w>
       <w>mytest</w>
+      <w>newkey</w>
       <w>passworderror</w>
       <w>registertime</w>
+      <w>renamenx</w>
       <w>sadd</w>
       <w>scard</w>
       <w>sdiff</w>
       <w>serverport</w>
+      <w>setnx</w>
       <w>sinter</w>
       <w>sismember</w>
       <w>smembers</w>
@@ -68,6 +71,7 @@
       <w>zrange</w>
       <w>zrem</w>
       <w>zrevrange</w>
+      <w>zset</w>
     </words>
   </dictionary>
 </component>

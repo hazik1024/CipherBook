@@ -9,5 +9,6 @@ public class RedisKey {
     /**
      * uid做key的前缀
      */
+    public static final String USER_LOGIN_TOKEN_USER_ID_PREFIX = "userlogintoken:uid:";
     public static final String USER_ID_PREFIX = "uid:";
 }

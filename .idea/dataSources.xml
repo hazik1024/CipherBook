@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="hibernate.cfg.xml/Hibernate" uuid="b0278fee-4b66-45dc-80b1-50987094d785">
+    <data-source source="LOCAL" name="hibernate.cfg.xml/Hibernate" uuid="fe948ce0-9bac-4a08-b2e8-5c30dfd91d2e">
       <driver-ref>mysql</driver-ref>
       <synchronize>true</synchronize>
       <imported>true</imported>
