@@ -36,5 +36,5 @@ public class GlobalConfig {
     /**
      * 用户登录token默认过期时间
      */
-    public static final int TOKEN_EXPIRE = 86400;
+    public static final int TOKEN_EXPIRE = 86400 * 7;
 }

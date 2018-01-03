@@ -36,6 +36,7 @@
       <w>scard</w>
       <w>sdiff</w>
       <w>serverport</w>
+      <w>setex</w>
       <w>setnx</w>
       <w>sinter</w>
       <w>sismember</w>

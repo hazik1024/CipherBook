@@ -34,17 +34,25 @@ public class LoginService extends BaseService {
         UserEntity userEntity = userDao.queryUser(username);
         if (userEntity == null) {
             requestAction.setServiceCode(ServiceCode.usernameerror);
+            logger.info("用户登录名[" + username + "]不存在");
         }
         else {
             if (password.equals(userEntity.getPassword())) {
-                UUID sid = UUID.randomUUID();
-                requestAction.setToken(sid.toString());
-
+                String token = UUID.randomUUID().toString();
+                requestAction.setToken(token);
                 //存储到redis
-
+                UserCacheDao userCacheDao = new UserCacheDao();
+                if (userCacheDao.saveToken(userEntity.getUid(), token)) {
+                    loginAction.setToken(token);
+                    logger.info("用户[" + username + "]登录token[" + token + "]缓存成功");
+                }
+                else {
+                    logger.info("用户[" + username + "]登录token[" + token + "]缓存失败");
+                }
             }
             else {
                 requestAction.setServiceCode(ServiceCode.passworderror);
+                logger.info("用户[" + username + "]登录密码[" + password + "]错误");
             }
         }
 
@@ -71,12 +79,12 @@ public class LoginService extends BaseService {
 //            logger.info("count:" + count);
 //        }
 
-        UserCacheDao userCacheDao = new UserCacheDao();
-        if (userCacheDao.saveToken(1,UUID.randomUUID().toString())) {
-            logger.info("保存成功");
-        }
-        else {
-            logger.info("保存失败");
-        }
+//        UserCacheDao userCacheDao = new UserCacheDao();
+//        if (userCacheDao.saveToken(1,UUID.randomUUID().toString())) {
+//            logger.info("保存成功");
+//        }
+//        else {
+//            logger.info("保存失败");
+//        }
     }
 }

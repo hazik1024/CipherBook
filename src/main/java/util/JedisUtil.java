@@ -280,27 +280,6 @@ public class JedisUtil {
     }
 
     /**
-     * 保存value和过期时间
-     * 无论key是否存在
-     * @param key key
-     * @param value value
-     * @param time time
-     * @return (OK成功, 失败返回)
-     */
-    public static String set(String key, String value, long time) {
-        String result = null;
-        try {
-            Jedis jedis = JedisClient.getInstance().getJedis();
-            result = jedis.set(key, value, "", "EX", time);
-            jedis.close();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-    /**
      * key不存在时保存value
      * @param key key
      * @param value value

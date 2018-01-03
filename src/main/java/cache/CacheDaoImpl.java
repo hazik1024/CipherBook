@@ -7,6 +7,8 @@ import java.util.Map;
 
 public abstract class CacheDaoImpl<T> implements CacheDao<T> {
     private static final String OK = "OK";
+    private static final int SUCCESS = 1;
+    private static final int FAIL = 0;
     public abstract T mapToEntity(Map<String, String> map);
     public abstract Map<String, String> entityToMap(T entity);
 
@@ -15,9 +17,17 @@ public abstract class CacheDaoImpl<T> implements CacheDao<T> {
         return OK.equals(result);
     }
 
-    public boolean save(String key, String value, long expire) {
-        String result = JedisUtil.set(key, value, expire);
+    public boolean save(String key, String value, int expire) {
+        boolean exists = JedisUtil.exists(key);
+        String result;
+        if (exists) {
+            result = JedisUtil.setex(key, value, expire);
+        }
+        else {
+            result = JedisUtil.setnx(key, value, expire);
+        }
         return OK.equals(result);
+
     }
 
     public boolean save(String key, T entity) {
@@ -44,7 +54,7 @@ public abstract class CacheDaoImpl<T> implements CacheDao<T> {
         return this.save(key, entity);
     }
 
-    public boolean update(String key, String value, long expire) {
+    public boolean update(String key, String value, int expire) {
         return this.save(key, value, expire);
     }
 
